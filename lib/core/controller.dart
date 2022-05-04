@@ -1,92 +1,39 @@
-import 'package:album/core/context.dart';
-import 'package:album/core/debug.dart';
+import 'package:album/core/action.dart';
+import 'package:album/core/channel.dart';
+import 'package:album/core/lifecycle.dart';
+import 'package:album/core/locator.dart';
 import 'package:flutter/widgets.dart';
 
-class _AppController extends StatefulWidget {
-  final BuildContext inheritedContext;
-  final String label;
-  final Widget Function(BuildContext) renderer;
-  final void Function(BuildContext) onCreate;
-  final void Function(BuildContext) onStart;
-  final void Function(BuildContext) onDestroy;
-
-  const _AppController({
+abstract class Controller extends Lifecycle {
+  const Controller({
     Key? key,
-    required this.inheritedContext,
-    required this.label,
-    required this.renderer,
-    required this.onCreate,
-    required this.onStart,
-    required this.onDestroy,
   }) : super(key: key);
 
-  @override
-  State<_AppController> createState() => _ControllerState();
-}
-
-class _ControllerState extends State<_AppController> {
-  @override
-  void initState() {
-    widget.onCreate(widget.inheritedContext);
-
-    super.initState();
+  Channel of(String scope) {
+    return Locator.of(scope);
   }
 
   @override
-  void dispose() {
-    widget.onDestroy(context);
+  @mustCallSuper
+  void onCreated(BuildContext context) {
+    of(toString()).dispatch(Created());
 
-    contextQueue.remove(context);
-
-    Debug.log(
-      "${widget.label} is being destroyed",
-    );
-
-    super.dispose();
+    super.onCreated(context);
   }
 
   @override
-  Widget build(BuildContext context) {
-    if (!contextQueue.contains(context)) {
-      contextQueue.add(context);
+  @mustCallSuper
+  void onStarted(BuildContext context) {
+    of(toString()).dispatch(Started());
 
-      Debug.log(
-        "${widget.label} is being mounted",
-      );
-
-      Future.delayed(Duration.zero, () {
-        widget.onStart(context);
-      });
-    }
-
-    return widget.renderer(context);
+    super.onStarted(context);
   }
-}
-
-abstract class Controller<T> extends StatelessWidget {
-  const Controller({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return _AppController(
-      inheritedContext: context,
-      label: toString(),
-      renderer: render,
-      onCreate: onCreate,
-      onStart: onStart,
-      onDestroy: onDestroy,
-    );
+  @mustCallSuper
+  void onDestroyed(BuildContext context) {
+    of(toString()).dispatch(Destoryed());
+
+    super.onDestroyed(context);
   }
-
-  @protected
-  void onCreate(BuildContext context) {}
-
-  @protected
-  void onStart(BuildContext context) {}
-
-  @protected
-  void onDestroy(BuildContext context) {}
-
-  @protected
-  Widget render(BuildContext context);
 }

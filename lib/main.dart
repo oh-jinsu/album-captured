@@ -1,8 +1,9 @@
-import 'package:album/application/application.dart';
+import 'package:album/application/controller.dart';
+import 'package:album/core/locator.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(const Application());
+  runApp(Provider(controller: const App()));
 }
