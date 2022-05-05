@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class HomeGridView extends StatelessWidget {
+class AlbumList extends StatelessWidget {
   final List<Widget> children;
 
-  const HomeGridView({
+  const AlbumList({
     Key? key,
     required this.children,
   }) : super(key: key);

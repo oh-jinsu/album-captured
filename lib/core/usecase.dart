@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:album/core/action.dart';
+import 'package:album/core/event.dart';
 import 'package:album/core/channel.dart';
 import 'package:album/core/controller.dart';
 import 'package:album/core/debug.dart';
@@ -13,13 +13,13 @@ class _Channel {
 
   final List<StreamSubscription> _subscriptions = [];
 
-  void on<T extends Action>(void Function(T action) function) {
+  void on<T extends Event>(void Function(T action) function) {
     final subscription = _channel.on<T>(function);
 
     _subscriptions.add(subscription);
   }
 
-  void dispatch<T extends Action>(T action) {
+  void dispatch<T extends Event>(T action) {
     _channel.dispatch<T>(action);
   }
 

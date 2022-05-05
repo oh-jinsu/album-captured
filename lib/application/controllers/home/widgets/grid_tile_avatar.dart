@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class HomeGridTileAvatar extends StatelessWidget {
+class AlbumTileAvatar extends StatelessWidget {
   final String? networkImageUri;
 
-  const HomeGridTileAvatar({
+  const AlbumTileAvatar({
     Key? key,
     required this.networkImageUri,
   }) : super(key: key);

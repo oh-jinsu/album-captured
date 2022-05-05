@@ -1,18 +1,14 @@
+import 'package:album/application/controllers/home/stores/albums.dart';
 import 'package:album/application/controllers/home/widgets/grid_tile/default_cover.dart';
+import 'package:album/application/controllers/home/widgets/grid_tile_avatar.dart';
 import 'package:flutter/material.dart';
 
-class HomeGridTile extends StatelessWidget {
-  final String title;
-  final int count;
-  final String? coverImageUri;
-  final Widget people;
+class AlbumTile extends StatelessWidget {
+  final AlbumViewModel viewModel;
 
-  const HomeGridTile({
+  const AlbumTile({
     Key? key,
-    required this.title,
-    required this.count,
-    required this.coverImageUri,
-    required this.people,
+    required this.viewModel,
   }) : super(key: key);
 
   @override
@@ -38,16 +34,27 @@ class HomeGridTile extends StatelessWidget {
               children: [
                 AspectRatio(
                   aspectRatio: 1.0,
-                  child: coverImageUri != null
+                  child: viewModel.coverImageUri != null
                       ? Image(
                           image: NetworkImage(
-                            coverImageUri!,
+                            viewModel.coverImageUri!,
                           ),
                         )
-                      : const HomeGridTileDefaultCover(),
+                      : const AlbumDefaultCover(),
                 ),
                 const SizedBox(height: 8.0),
-                people,
+                Row(
+                  children: [
+                    for (int j = 0; j < viewModel.users.length * 2 - 1; j++)
+                      if (j % 2 == 0)
+                        AlbumTileAvatar(
+                          networkImageUri:
+                              viewModel.users[j ~/ 2].avatarImageUri,
+                        )
+                      else
+                        const SizedBox(width: 4.0)
+                  ],
+                ),
               ],
             ),
           ),
@@ -61,14 +68,14 @@ class HomeGridTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                title,
+                viewModel.title,
                 style: const TextStyle(
                   fontSize: 16.0,
                 ),
               ),
               const SizedBox(height: 2.0),
               Text(
-                count.toString(),
+                viewModel.photoCount.toString(),
                 style: TextStyle(
                   fontSize: 16.0,
                   color: Colors.grey[600],

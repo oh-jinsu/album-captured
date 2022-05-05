@@ -1,9 +1,9 @@
-import 'package:album/application/controllers/home/actions/find_albums.dart';
 import 'package:album/application/controllers/home/controller.dart';
+import 'package:album/application/controllers/home/events/find_albums.dart';
 import 'package:album/application/controllers/home/models/album.dart';
 import 'package:album/application/controllers/home/models/album_user.dart';
 import 'package:album/application/controllers/home/models/list_of_albums.dart';
-import 'package:album/core/action.dart';
+import 'package:album/core/event.dart';
 import 'package:album/core/usecase.dart';
 import 'package:album/repositories/auth.dart';
 import 'package:album/utils/fetch.dart';
@@ -49,7 +49,7 @@ class FindAlbumsUseCase extends UseCase {
 
       final body = ListOfAlbumsModel(next: next, items: items);
 
-      final result = FindAlbums(body);
+      final result = FindAlbumsEvent(body);
 
       of<Home>().dispatch(result);
     });

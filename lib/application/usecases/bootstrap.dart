@@ -1,5 +1,5 @@
 import 'package:album/application/controller.dart';
-import 'package:album/core/action.dart';
+import 'package:album/core/event.dart';
 import 'package:album/core/navigator.dart';
 import 'package:album/core/usecase.dart';
 import 'package:album/firebase_options.dart';

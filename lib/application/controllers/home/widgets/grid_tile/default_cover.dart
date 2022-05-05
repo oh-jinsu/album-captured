@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-class HomeGridTileDefaultCover extends StatelessWidget {
-  const HomeGridTileDefaultCover({Key? key}) : super(key: key);
+class AlbumDefaultCover extends StatelessWidget {
+  const AlbumDefaultCover({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

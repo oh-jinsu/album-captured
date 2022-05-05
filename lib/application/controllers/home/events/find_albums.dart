@@ -1,10 +1,10 @@
 import 'package:album/application/controllers/home/models/list_of_albums.dart';
-import 'package:album/core/action.dart';
+import 'package:album/core/event.dart';
 
-class FindAlbums implements Action {
+class FindAlbumsEvent implements Event {
   final ListOfAlbumsModel body;
 
-  FindAlbums(
+  FindAlbumsEvent(
     this.body,
   );
 }

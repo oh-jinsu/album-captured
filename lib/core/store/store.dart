@@ -1,10 +1,12 @@
 import 'dart:async';
 
-import 'package:album/core/action.dart';
+import 'package:album/core/event.dart';
 import 'package:album/core/channel.dart';
 import 'package:album/core/controller.dart';
 import 'package:album/core/debug.dart';
 import 'package:album/core/locator.dart';
+import 'package:album/core/store/builder.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/subjects.dart';
 
 class _Channel<T> {
@@ -18,7 +20,7 @@ class _Channel<T> {
 
   final List<StreamSubscription> _subscriptions = [];
 
-  void on<K extends Action>(T Function(K action) function) {
+  void on<K extends Event>(T Function(K action) function) {
     final subscription = _channel.on<K>((data) {
       final result = function(data);
 
@@ -78,4 +80,18 @@ abstract class Store<T> {
   }
 
   void onDispose() {}
+
+  StoreBuilder subscribe({
+    Key? key,
+    required Widget Function(T) onNext,
+    Widget Function()? onLoad,
+    Widget Function()? onError,
+  }) {
+    return StoreBuilder<T>(
+      this,
+      onNext: onNext,
+      onLoad: onLoad,
+      onError: onError,
+    );
+  }
 }

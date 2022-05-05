@@ -1,4 +1,4 @@
-import 'package:album/core/action.dart';
+import 'package:album/core/event.dart';
 import 'package:album/core/channel.dart';
 import 'package:album/core/lifecycle.dart';
 import 'package:album/core/locator.dart';

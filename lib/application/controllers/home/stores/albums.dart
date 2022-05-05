@@ -1,13 +1,57 @@
-import 'package:album/application/controllers/home/actions/find_albums.dart';
 import 'package:album/application/controllers/home/controller.dart';
-import 'package:album/application/controllers/home/viewmodels/album.dart';
-import 'package:album/core/store.dart';
+import 'package:album/application/controllers/home/events/find_albums.dart';
+import 'package:album/application/controllers/home/models/album.dart';
+import 'package:album/application/controllers/home/models/album_user.dart';
+import 'package:album/core/store/store.dart';
 
-class HomeAlbumsStore extends Store<List<AlbumViewModel>> {
+class AlbumUserViewModel {
+  final String id;
+  final String? avatarImageUri;
+
+  AlbumUserViewModel({
+    required this.id,
+    required this.avatarImageUri,
+  });
+
+  factory AlbumUserViewModel.fromModel(AlbumUserModel model) {
+    return AlbumUserViewModel(
+      id: model.id,
+      avatarImageUri: model.avatarImageUri,
+    );
+  }
+}
+
+class AlbumViewModel {
+  final String id;
+  final String? coverImageUri;
+  final String title;
+  final List<AlbumUserViewModel> users;
+  final int photoCount;
+
+  AlbumViewModel({
+    required this.id,
+    required this.coverImageUri,
+    required this.title,
+    required this.users,
+    required this.photoCount,
+  });
+
+  factory AlbumViewModel.fromModel(AlbumModel model) {
+    return AlbumViewModel(
+      id: model.id,
+      coverImageUri: model.coverImageUri,
+      title: model.title,
+      users: model.users.map(AlbumUserViewModel.fromModel).toList(),
+      photoCount: model.photoCount,
+    );
+  }
+}
+
+class AlbumListStore extends Store<List<AlbumViewModel>> {
   @override
-  onListen() => of<Home>().on<FindAlbums>(_onFindAlbums);
+  onListen() => of<Home>().on<FindAlbumsEvent>(_onFindAlbums);
 
-  List<AlbumViewModel> _onFindAlbums(FindAlbums action) {
+  List<AlbumViewModel> _onFindAlbums(FindAlbumsEvent action) {
     return action.body.items.map(AlbumViewModel.fromModel).toList();
   }
 }
