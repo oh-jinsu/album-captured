@@ -24,6 +24,8 @@ class _Lifecycle extends StatefulWidget {
 }
 
 class _ControllerState extends State<_Lifecycle> {
+  bool _started = false;
+
   @override
   void initState() {
     widget.onCreate(context);
@@ -40,9 +42,11 @@ class _ControllerState extends State<_Lifecycle> {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration.zero, () {
-      widget.onStart(context);
-    });
+    if (!_started) {
+      Future.delayed(Duration.zero, () => widget.onStart(context));
+
+      _started = true;
+    }
 
     return widget.renderer(context);
   }
