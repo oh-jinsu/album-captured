@@ -8,10 +8,10 @@ class TextFieldStateStore extends Store<TextFieldState> {
 
   @override
   void onListen() {
-    of<DialogToAddAlbum>().on<Pending>(_onAlbumPending);
+    of<DialogToAddAlbum>().on<Pending>(_onPending);
   }
 
-  TextFieldState _onAlbumPending(Pending event) {
+  TextFieldState _onPending(Pending event) {
     return TextFieldState.disabled;
   }
 }

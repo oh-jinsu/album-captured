@@ -51,14 +51,14 @@ class AlbumViewModel {
 class AlbumListStore extends Store<List<AlbumViewModel>> {
   @override
   onListen() => of<Home>()
-    ..on<AlbumsFound>(_onFindAlbums)
-    ..on<AlbumAdded>(_onAddAlbum);
+    ..on<AlbumsFound>(_onAlbumsFound)
+    ..on<AlbumAdded>(_onAlbumAdded);
 
-  List<AlbumViewModel> _onFindAlbums(AlbumsFound event) {
+  List<AlbumViewModel> _onAlbumsFound(AlbumsFound event) {
     return event.body.items.map(AlbumViewModel.fromModel).toList();
   }
 
-  List<AlbumViewModel> _onAddAlbum(AlbumAdded event) {
+  List<AlbumViewModel> _onAlbumAdded(AlbumAdded event) {
     final newone = AlbumViewModel.fromModel(event.body);
 
     if (hasValue) {

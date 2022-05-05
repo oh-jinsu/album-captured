@@ -49,9 +49,7 @@ class FindAlbumsUseCase extends UseCase {
 
       final body = ListOfAlbumsModel(next: next, items: items);
 
-      final result = AlbumsFound(body: body);
-
-      of<Home>().dispatch(result);
+      of<Home>().dispatch(AlbumsFound(body: body));
     });
   }
 }
