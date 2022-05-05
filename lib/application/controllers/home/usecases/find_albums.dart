@@ -10,7 +10,7 @@ import 'package:album/utils/fetch.dart';
 
 class FindAlbumsUseCase extends UseCase {
   @override
-  onAwake() {
+  onAwaken() {
     of<Home>().on<Created>((event) async {
       final uri = Uri.parse("http://localhost:3000/v1/album");
 

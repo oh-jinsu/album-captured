@@ -31,6 +31,7 @@ abstract class Controller extends Lifecycle {
   }
 
   @override
+  @mustCallSuper
   void onCreated(BuildContext context) {
     final subscription = _channel.on<Navigated>((event) {
       if (event is Pushed) {
@@ -62,6 +63,7 @@ abstract class Controller extends Lifecycle {
   }
 
   @override
+  @mustCallSuper
   void onStarted(BuildContext context) {
     _channel.dispatch(const Started());
 
@@ -69,6 +71,7 @@ abstract class Controller extends Lifecycle {
   }
 
   @override
+  @mustCallSuper
   void onDestroyed(BuildContext context) {
     for (final element in usecases) {
       element.dispose();
@@ -80,7 +83,7 @@ abstract class Controller extends Lifecycle {
 
     _channel.dispatch(const Destoryed());
 
-    _channel.close();
+    _channel.dispose();
 
     locatorManifest.remove(toString());
 

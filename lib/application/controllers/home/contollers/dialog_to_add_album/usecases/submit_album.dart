@@ -12,7 +12,7 @@ import 'package:album/utils/fetch.dart';
 
 class SubmitAlbumUseCase extends UseCase {
   @override
-  void onAwake() {
+  void onAwaken() {
     of<DialogToAddAlbum>().on<Submitted>(
       (event) async {
         of<DialogToAddAlbum>().dispatch(const Pending());

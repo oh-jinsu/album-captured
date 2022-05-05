@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:album/core/common/disposable.dart';
 import 'package:album/core/event/event.dart';
 import 'package:album/core/channel/channel.dart';
 import 'package:album/core/controller/controller.dart';
@@ -8,7 +9,7 @@ import 'package:album/core/store/builder.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/subjects.dart';
 
-class _Channel<T> {
+class _Channel<T> implements Disposable {
   final Channel _channel;
 
   final Sink<StoreData<T>> _sink;
@@ -29,7 +30,8 @@ class _Channel<T> {
     _subscriptions.add(subscription);
   }
 
-  void _dispose() {
+  @override
+  void dispose() {
     for (final element in _subscriptions) {
       element.cancel();
     }
@@ -46,7 +48,7 @@ class InitialData<T> extends StoreData<T> {
   InitialData(value) : super(value);
 }
 
-abstract class Store<T> {
+abstract class Store<T> implements Disposable {
   Stream<StoreData<T>> get stream => _subject;
 
   bool get hasValue => _subject.hasValue;
@@ -85,14 +87,15 @@ abstract class Store<T> {
   void onListen();
 
   void _onCancel() {
-    _dispose();
+    dispose();
   }
 
-  void _dispose() {
+  @override
+  void dispose() {
     onDispose();
 
     for (final element in _channels) {
-      element._dispose();
+      element.dispose();
     }
 
     _subject.close();

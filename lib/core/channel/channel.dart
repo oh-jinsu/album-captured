@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:album/core/common/disposable.dart';
 import 'package:album/core/event/event.dart';
 import 'package:rxdart/subjects.dart';
 
@@ -11,7 +12,7 @@ abstract class OutputPort {
   StreamSubscription on<T extends Event>(void Function(T event) function);
 }
 
-class Channel implements InputPort, OutputPort {
+class Channel implements InputPort, OutputPort, Disposable {
   final _subject = PublishSubject<Event>();
 
   @override
@@ -32,7 +33,8 @@ class Channel implements InputPort, OutputPort {
     _subject.add(event);
   }
 
-  void close() {
+  @override
+  void dispose() {
     _subject.close();
   }
 }

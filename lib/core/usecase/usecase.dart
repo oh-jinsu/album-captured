@@ -1,11 +1,12 @@
 import 'dart:async';
 
+import 'package:album/core/common/disposable.dart';
 import 'package:album/core/event/event.dart';
 import 'package:album/core/channel/channel.dart';
 import 'package:album/core/controller/controller.dart';
 import 'package:album/core/locator/locator.dart';
 
-class _Channel {
+class _Channel implements Disposable {
   final Channel _channel;
 
   _Channel(String scope) : _channel = Locator.of<Channel>(scope);
@@ -22,14 +23,15 @@ class _Channel {
     _channel.dispatch<T>(event);
   }
 
-  void _dispose() {
+  @override
+  void dispose() {
     for (final element in _subscriptions) {
       element.cancel();
     }
   }
 }
 
-abstract class UseCase {
+abstract class UseCase implements Disposable {
   final List<_Channel> _channels = [];
 
   _Channel of<T extends Controller>() {
@@ -41,17 +43,18 @@ abstract class UseCase {
   }
 
   void awake() {
-    onAwake();
+    onAwaken();
   }
 
-  void onAwake();
+  void onAwaken();
 
+  @override
   void dispose() {
-    for (final element in _channels) {
-      element._dispose();
-    }
-
     onDispose();
+
+    for (final element in _channels) {
+      element.dispose();
+    }
   }
 
   void onDispose() {}

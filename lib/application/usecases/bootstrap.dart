@@ -10,7 +10,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class BootstrapUseCase extends UseCase {
   @override
-  void onAwake() {
+  void onAwaken() {
     of<App>().on<Created>((event) async {
       await DotEnv().load();
 
