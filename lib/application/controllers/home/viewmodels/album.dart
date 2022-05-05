@@ -1,5 +1,5 @@
-import 'package:album/application/screens/home/models/album.dart';
-import 'package:album/application/screens/home/viewmodels/album_user.dart';
+import 'package:album/application/controllers/home/models/album.dart';
+import 'package:album/application/controllers/home/viewmodels/album_user.dart';
 
 class AlbumViewModel {
   final String id;

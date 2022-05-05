@@ -1,6 +1,6 @@
-import 'package:album/application/screens/home/controller.dart';
-import 'package:album/application/screens/home/usecases/find_albums.dart';
-import 'package:album/application/screens/splash/controller.dart';
+import 'package:album/application/controllers/home/controller.dart';
+import 'package:album/application/controllers/home/usecases/find_albums.dart';
+import 'package:album/application/controllers/splash/controller.dart';
 import 'package:album/core/controller.dart';
 import 'package:album/core/locator.dart';
 import 'package:flutter/cupertino.dart';

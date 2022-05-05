@@ -37,7 +37,7 @@ class BootstrapUseCase extends UseCase {
         });
       }
 
-      requireNavigator().pushNamed("/home");
+      requireNavigator().pushReplacementNamed("/home");
     });
   }
 }

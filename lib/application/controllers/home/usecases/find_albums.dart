@@ -1,8 +1,8 @@
-import 'package:album/application/screens/home/actions/find_albums.dart';
-import 'package:album/application/screens/home/controller.dart';
-import 'package:album/application/screens/home/models/album.dart';
-import 'package:album/application/screens/home/models/album_user.dart';
-import 'package:album/application/screens/home/models/list_of_albums.dart';
+import 'package:album/application/controllers/home/actions/find_albums.dart';
+import 'package:album/application/controllers/home/controller.dart';
+import 'package:album/application/controllers/home/models/album.dart';
+import 'package:album/application/controllers/home/models/album_user.dart';
+import 'package:album/application/controllers/home/models/list_of_albums.dart';
 import 'package:album/core/action.dart';
 import 'package:album/core/usecase.dart';
 import 'package:album/repositories/auth.dart';

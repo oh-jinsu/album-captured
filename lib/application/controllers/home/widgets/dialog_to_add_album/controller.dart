@@ -1,29 +1,11 @@
-import 'package:album/application/screens/home/widgets/actions/add_album.dart';
-import 'package:album/application/screens/home/widgets/add_album_dialog/event/add_album.dart';
 import 'package:album/core/controller.dart';
 import 'package:album/core/navigator.dart';
 import 'package:flutter/cupertino.dart';
 
-class HomeAddAlbumDialog extends Controller {
+class DialogToAddAlbum extends Controller {
   final textEditingController = TextEditingController();
 
-  HomeAddAlbumDialog({Key? key}) : super(key: key);
-
-  @override
-  void onCreated(BuildContext context) {
-    super.onCreated(context);
-
-    observeAddAlbum();
-  }
-
-  @override
-  void onDestroyed(BuildContext context) {
-    super.onDestroyed(context);
-
-    textEditingController.dispose();
-
-    detachAddAlbum();
-  }
+  DialogToAddAlbum({Key? key}) : super(key: key);
 
   @override
   Widget render(BuildContext context) {
@@ -51,8 +33,6 @@ class HomeAddAlbumDialog extends Controller {
         CupertinoButton(
           onPressed: () {
             final title = textEditingController.text;
-
-            addAlbumEvent.add(AddAlbumEventModel(title: title));
 
             requireNavigator().pop();
           },

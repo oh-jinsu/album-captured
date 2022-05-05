@@ -1,6 +1,6 @@
-import 'package:album/application/screens/home/actions/find_albums.dart';
-import 'package:album/application/screens/home/controller.dart';
-import 'package:album/application/screens/home/viewmodels/album.dart';
+import 'package:album/application/controllers/home/actions/find_albums.dart';
+import 'package:album/application/controllers/home/controller.dart';
+import 'package:album/application/controllers/home/viewmodels/album.dart';
 import 'package:album/core/store.dart';
 
 class HomeAlbumsStore extends Store<List<AlbumViewModel>> {

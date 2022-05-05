@@ -1,19 +1,17 @@
-import 'package:album/application/screens/home/widgets/grid_tile/default_cover.dart';
+import 'package:album/application/controllers/home/widgets/grid_tile/default_cover.dart';
 import 'package:flutter/material.dart';
 
 class HomeGridTile extends StatelessWidget {
-  final void Function() onTap;
   final String title;
   final int count;
-  final Widget? image;
+  final String? coverImageUri;
   final Widget people;
 
   const HomeGridTile({
     Key? key,
-    required this.onTap,
     required this.title,
     required this.count,
-    required this.image,
+    required this.coverImageUri,
     required this.people,
   }) : super(key: key);
 
@@ -23,7 +21,7 @@ class HomeGridTile extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         GestureDetector(
-          onTap: onTap,
+          onTap: () {},
           child: Container(
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
@@ -39,8 +37,15 @@ class HomeGridTile extends StatelessWidget {
             child: Column(
               children: [
                 AspectRatio(
-                    aspectRatio: 1.0,
-                    child: image ?? const HomeGridTileDefaultCover()),
+                  aspectRatio: 1.0,
+                  child: coverImageUri != null
+                      ? Image(
+                          image: NetworkImage(
+                            coverImageUri!,
+                          ),
+                        )
+                      : const HomeGridTileDefaultCover(),
+                ),
                 const SizedBox(height: 8.0),
                 people,
               ],
