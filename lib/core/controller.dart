@@ -1,38 +1,87 @@
-import 'package:album/core/event.dart';
+import 'dart:async';
+
 import 'package:album/core/channel.dart';
+import 'package:album/core/context.dart';
+import 'package:album/core/event.dart';
 import 'package:album/core/lifecycle.dart';
 import 'package:album/core/locator.dart';
+import 'package:album/core/usecase.dart';
 import 'package:flutter/widgets.dart';
 
 abstract class Controller extends Lifecycle {
-  const Controller({
+  final _channel = Channel();
+
+  final List<StreamSubscription> _subscriptions = [];
+
+  final List<Service> services;
+
+  final List<UseCase> usecases;
+
+  Controller({
     Key? key,
+    this.services = const [],
+    this.usecases = const [],
   }) : super(key: key);
 
-  Channel of(String scope) {
-    return Locator.of(scope);
+  InputPort of<T>() {
+    final scope = T.toString();
+
+    return Locator.of<Channel>(scope);
   }
 
   @override
-  @mustCallSuper
   void onCreated(BuildContext context) {
-    of(toString()).dispatch(Created());
+    final subscription = _channel.on<Navigated>((event) {
+      if (event is Pushed) {
+        Navigator.of(context).pushNamed(event.name);
+      }
+
+      if (event is Replaced) {
+        Navigator.of(context).pushReplacementNamed(event.name);
+      }
+
+      if (event is Popped) {
+        Navigator.of(context).pop();
+      }
+    });
+
+    _subscriptions.add(subscription);
+
+    locatorManifest[toString()] = Locator(
+      [Singleton<Channel>(_channel), ...services],
+    );
+
+    for (final element in usecases) {
+      element.awake();
+    }
+
+    _channel.dispatch(const Created());
 
     super.onCreated(context);
   }
 
   @override
-  @mustCallSuper
   void onStarted(BuildContext context) {
-    of(toString()).dispatch(Started());
+    _channel.dispatch(const Started());
 
     super.onStarted(context);
   }
 
   @override
-  @mustCallSuper
   void onDestroyed(BuildContext context) {
-    of(toString()).dispatch(Destoryed());
+    for (final element in usecases) {
+      element.dispose();
+    }
+
+    for (final subscription in _subscriptions) {
+      subscription.cancel();
+    }
+
+    _channel.dispatch(const Destoryed());
+
+    _channel.close();
+
+    locatorManifest.remove(toString());
 
     super.onDestroyed(context);
   }

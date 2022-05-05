@@ -1,5 +1,5 @@
 import 'package:album/application/controllers/home/controller.dart';
-import 'package:album/application/controllers/home/events/find_albums.dart';
+import 'package:album/application/controllers/home/events/albums_found.dart';
 import 'package:album/application/controllers/home/models/album.dart';
 import 'package:album/application/controllers/home/models/album_user.dart';
 import 'package:album/application/controllers/home/models/list_of_albums.dart';
@@ -11,7 +11,7 @@ import 'package:album/utils/fetch.dart';
 class FindAlbumsUseCase extends UseCase {
   @override
   onAwake() {
-    of<Home>().on<Created>((action) async {
+    of<Home>().on<Created>((event) async {
       final uri = Uri.parse("http://localhost:3000/v1/album");
 
       final accessToken = await authRepository.findAccessToken();
@@ -49,7 +49,7 @@ class FindAlbumsUseCase extends UseCase {
 
       final body = ListOfAlbumsModel(next: next, items: items);
 
-      final result = FindAlbumsEvent(body);
+      final result = AlbumsFound(body: body);
 
       of<Home>().dispatch(result);
     });

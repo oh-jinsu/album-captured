@@ -14,4 +14,23 @@ class AlbumModel {
     required this.users,
     required this.photoCount,
   });
+
+  factory AlbumModel.fromJson(Map json) {
+    return AlbumModel(
+      id: json["id"],
+      coverImageUri: json["cover_image_uri"],
+      title: json["title"],
+      photoCount: json["photo_count"],
+      users: (json["users"] as List)
+          .map(
+            (e) => AlbumUserModel(
+              id: e["id"],
+              avatarImageUri: e["avatar_image_uri"],
+              name: e["name"],
+              joinedAt: DateTime.parse(e["joined_at"]),
+            ),
+          )
+          .toList(),
+    );
+  }
 }

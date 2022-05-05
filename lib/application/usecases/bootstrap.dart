@@ -1,6 +1,6 @@
 import 'package:album/application/controller.dart';
+import 'package:album/application/controllers/splash/controller.dart';
 import 'package:album/core/event.dart';
-import 'package:album/core/navigator.dart';
 import 'package:album/core/usecase.dart';
 import 'package:album/firebase_options.dart';
 import 'package:album/repositories/auth.dart';
@@ -11,7 +11,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class BootstrapUseCase extends UseCase {
   @override
   void onAwake() {
-    of<App>().on<Created>((action) async {
+    of<App>().on<Created>((event) async {
       await DotEnv().load();
 
       await Firebase.initializeApp(
@@ -37,7 +37,7 @@ class BootstrapUseCase extends UseCase {
         });
       }
 
-      requireNavigator().pushReplacementNamed("/home");
+      of<Splash>().dispatch(const Pushed("/home"));
     });
   }
 }

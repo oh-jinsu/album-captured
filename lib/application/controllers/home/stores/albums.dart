@@ -1,5 +1,6 @@
 import 'package:album/application/controllers/home/controller.dart';
-import 'package:album/application/controllers/home/events/find_albums.dart';
+import 'package:album/application/controllers/home/events/album_added.dart';
+import 'package:album/application/controllers/home/events/albums_found.dart';
 import 'package:album/application/controllers/home/models/album.dart';
 import 'package:album/application/controllers/home/models/album_user.dart';
 import 'package:album/core/store/store.dart';
@@ -49,9 +50,21 @@ class AlbumViewModel {
 
 class AlbumListStore extends Store<List<AlbumViewModel>> {
   @override
-  onListen() => of<Home>().on<FindAlbumsEvent>(_onFindAlbums);
+  onListen() => of<Home>()
+    ..on<AlbumsFound>(_onFindAlbums)
+    ..on<AlbumAdded>(_onAddAlbum);
 
-  List<AlbumViewModel> _onFindAlbums(FindAlbumsEvent action) {
-    return action.body.items.map(AlbumViewModel.fromModel).toList();
+  List<AlbumViewModel> _onFindAlbums(AlbumsFound event) {
+    return event.body.items.map(AlbumViewModel.fromModel).toList();
+  }
+
+  List<AlbumViewModel> _onAddAlbum(AlbumAdded event) {
+    final newone = AlbumViewModel.fromModel(event.body);
+
+    if (hasValue) {
+      return [newone, ...value];
+    }
+
+    return [newone];
   }
 }

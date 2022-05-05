@@ -1,13 +1,17 @@
 import 'package:album/application/controllers/home/controller.dart';
-import 'package:album/application/controllers/home/usecases/find_albums.dart';
 import 'package:album/application/controllers/splash/controller.dart';
+import 'package:album/application/usecases/bootstrap.dart';
 import 'package:album/core/controller.dart';
-import 'package:album/core/locator.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 class App extends Controller {
-  const App({Key? key}) : super(key: key);
+  App({Key? key})
+      : super(
+          key: key,
+          usecases: [
+            BootstrapUseCase(),
+          ],
+        );
 
   @override
   Widget render(BuildContext context) {
@@ -22,22 +26,15 @@ class App extends Controller {
         final name = settings.name;
 
         if (name == "/splash") {
-          return MaterialPageRoute(
-            builder: (context) => Provider(
-              controller: const Splash(),
-            ),
+          return PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => Splash(),
           );
         }
 
         if (name == "/home") {
           return PageRouteBuilder(
             transitionDuration: Duration.zero,
-            pageBuilder: (context, animation, secondaryAnimation) => Provider(
-              usecases: [
-                FindAlbumsUseCase(),
-              ],
-              controller: const Home(),
-            ),
+            pageBuilder: (context, animation, secondaryAnimation) => Home(),
           );
         }
 

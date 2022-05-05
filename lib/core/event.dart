@@ -1,7 +1,41 @@
-abstract class Event {}
+abstract class Event {
+  const Event();
+}
 
-class Created implements Event {}
+abstract class OutputEvent<T> extends Event {
+  final T body;
 
-class Started implements Event {}
+  const OutputEvent({required this.body});
+}
 
-class Destoryed implements Event {}
+abstract class Navigated extends Event {
+  const Navigated();
+}
+
+class Pushed extends Navigated {
+  final String name;
+
+  const Pushed(this.name);
+}
+
+class Replaced extends Navigated {
+  final String name;
+
+  const Replaced(this.name);
+}
+
+class Popped extends Navigated {
+  const Popped();
+}
+
+class Created extends Event {
+  const Created();
+}
+
+class Started extends Event {
+  const Started();
+}
+
+class Destoryed extends Event {
+  const Destoryed();
+}

@@ -28,7 +28,9 @@ class StoreBuilder<T> extends StatelessWidget {
         }
 
         if (snapshot.hasData) {
-          return onNext(snapshot.data as T);
+          final data = snapshot.data as StoreData<T>;
+
+          return onNext(data.x);
         }
 
         return onLoad?.call() ??

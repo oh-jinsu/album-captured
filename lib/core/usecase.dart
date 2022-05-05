@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:album/core/event.dart';
 import 'package:album/core/channel.dart';
 import 'package:album/core/controller.dart';
-import 'package:album/core/debug.dart';
 import 'package:album/core/locator.dart';
 
 class _Channel {
@@ -13,14 +12,14 @@ class _Channel {
 
   final List<StreamSubscription> _subscriptions = [];
 
-  void on<T extends Event>(void Function(T action) function) {
+  void on<T extends Event>(void Function(T event) function) {
     final subscription = _channel.on<T>(function);
 
     _subscriptions.add(subscription);
   }
 
-  void dispatch<T extends Event>(T action) {
-    _channel.dispatch<T>(action);
+  void dispatch<T extends Event>(T event) {
+    _channel.dispatch<T>(event);
   }
 
   void _dispose() {
@@ -43,8 +42,6 @@ abstract class UseCase {
 
   void awake() {
     onAwake();
-
-    Debug.log("$runtimeType is awaken");
   }
 
   void onAwake();
@@ -55,8 +52,6 @@ abstract class UseCase {
     }
 
     onDispose();
-
-    Debug.log("$runtimeType is disposed");
   }
 
   void onDispose() {}

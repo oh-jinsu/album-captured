@@ -1,4 +1,6 @@
+import 'package:album/application/controllers/home/contollers/dialog_to_add_album/controller.dart';
 import 'package:album/application/controllers/home/stores/albums.dart';
+import 'package:album/application/controllers/home/usecases/find_albums.dart';
 import 'package:album/application/controllers/home/widgets/grid_tile/grid_tile.dart';
 import 'package:album/application/controllers/home/widgets/grid_view.dart';
 import 'package:album/application/widgets/button.dart';
@@ -6,7 +8,13 @@ import 'package:album/core/controller.dart';
 import 'package:flutter/cupertino.dart';
 
 class Home extends Controller {
-  const Home({Key? key}) : super(key: key);
+  Home({Key? key})
+      : super(
+          key: key,
+          usecases: [
+            FindAlbumsUseCase(),
+          ],
+        );
 
   @override
   Widget render(BuildContext context) {
@@ -17,7 +25,10 @@ class Home extends Controller {
             CupertinoSliverNavigationBar(
               largeTitle: const Text("앨범"),
               leading: AppButton(
-                onPressed: () {},
+                onPressed: () => showCupertinoDialog(
+                  context: context,
+                  builder: (context) => DialogToAddAlbum(),
+                ),
                 child: const Icon(CupertinoIcons.add),
               ),
             ),

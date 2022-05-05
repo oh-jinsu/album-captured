@@ -2,7 +2,7 @@ import 'package:album/core/controller.dart';
 import 'package:flutter/cupertino.dart';
 
 class Splash extends Controller {
-  const Splash({Key? key}) : super(key: key);
+  Splash({Key? key}) : super(key: key);
 
   @override
   Widget render(BuildContext context) {

@@ -1,30 +1,25 @@
 import 'dart:async';
 
 import 'package:album/core/event.dart';
-import 'package:album/core/debug.dart';
 import 'package:rxdart/subjects.dart';
 
 abstract class InputPort {
-  void dispatch<T extends Event>(T action);
+  void dispatch<T extends Event>(T event);
 }
 
 abstract class OutputPort {
-  StreamSubscription on<T extends Event>(void Function(T action) function);
+  StreamSubscription on<T extends Event>(void Function(T event) function);
 }
 
 class Channel implements InputPort, OutputPort {
   final _subject = PublishSubject<Event>();
 
   @override
-  StreamSubscription on<T extends Event>(void Function(T action) function) {
-    Debug.log("${T}Action is subscribed");
-
+  StreamSubscription on<T extends Event>(void Function(T event) function) {
     final subscription = _subject.listen((value) {
       if (value is! T) {
         return;
       }
-
-      Debug.log("${T}Action is invoked");
 
       function(value);
     });
@@ -33,13 +28,11 @@ class Channel implements InputPort, OutputPort {
   }
 
   @override
-  void dispatch<T extends Event>(T action) {
-    _subject.add(action);
+  void dispatch<T extends Event>(T event) {
+    _subject.add(event);
   }
 
   void close() {
-    Debug.log("$runtimeType is closed");
-
     _subject.close();
   }
 }
