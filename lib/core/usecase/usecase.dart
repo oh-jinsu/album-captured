@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:album/core/event.dart';
-import 'package:album/core/channel.dart';
-import 'package:album/core/controller.dart';
-import 'package:album/core/locator.dart';
+import 'package:album/core/event/event.dart';
+import 'package:album/core/channel/channel.dart';
+import 'package:album/core/controller/controller.dart';
+import 'package:album/core/locator/locator.dart';
 
 class _Channel {
   final Channel _channel;

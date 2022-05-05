@@ -1,4 +1,4 @@
-import 'package:album/core/controller.dart';
+import 'package:album/core/controller/controller.dart';
 import 'package:flutter/cupertino.dart';
 
 class Splash extends Controller {

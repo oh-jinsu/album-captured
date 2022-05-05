@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:album/core/channel.dart';
-import 'package:album/core/context.dart';
-import 'package:album/core/event.dart';
-import 'package:album/core/lifecycle.dart';
-import 'package:album/core/locator.dart';
-import 'package:album/core/usecase.dart';
+import 'package:album/core/channel/channel.dart';
+import 'package:album/core/event/event.dart';
+import 'package:album/core/controller/lifecycle.dart';
+import 'package:album/core/locator/locator.dart';
+import 'package:album/core/locator/service.dart';
+import 'package:album/core/locator/singleton.dart';
+import 'package:album/core/usecase/usecase.dart';
 import 'package:flutter/widgets.dart';
 
 abstract class Controller extends Lifecycle {

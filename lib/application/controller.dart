@@ -1,7 +1,7 @@
 import 'package:album/application/controllers/home/controller.dart';
 import 'package:album/application/controllers/splash/controller.dart';
 import 'package:album/application/usecases/bootstrap.dart';
-import 'package:album/core/controller.dart';
+import 'package:album/core/controller/controller.dart';
 import 'package:flutter/cupertino.dart';
 
 class App extends Controller {

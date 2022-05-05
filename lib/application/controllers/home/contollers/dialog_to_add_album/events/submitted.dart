@@ -1,4 +1,4 @@
-import 'package:album/core/event.dart';
+import 'package:album/core/event/event.dart';
 
 class Submitted extends Event {
   final String title;

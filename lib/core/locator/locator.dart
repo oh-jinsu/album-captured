@@ -1,28 +1,4 @@
-abstract class Service<T> {
-  String get _key => T.toString();
-
-  T _require();
-}
-
-class Singleton<T> extends Service<T> {
-  final T instance;
-
-  Singleton(
-    this.instance,
-  );
-
-  @override
-  T _require() => instance;
-}
-
-class Factory<T> extends Service<T> {
-  final T Function() constructor;
-
-  Factory(this.constructor);
-
-  @override
-  T _require() => constructor();
-}
+import 'package:album/core/locator/service.dart';
 
 final Map<String, Locator> locatorManifest = {};
 
@@ -31,7 +7,7 @@ class Locator {
 
   Locator(List<Service> services) {
     for (final service in services) {
-      _manifest[service._key] = service;
+      _manifest[service.key] = service;
     }
   }
 
@@ -50,6 +26,6 @@ class Locator {
       throw Exception("$T not found");
     }
 
-    return service._require();
+    return service.require();
   }
 }

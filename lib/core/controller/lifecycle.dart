@@ -1,5 +1,4 @@
-import 'package:album/core/context.dart';
-import 'package:album/core/debug.dart';
+import 'package:album/core/utilities/debug.dart';
 import 'package:flutter/widgets.dart';
 
 class _Lifecycle extends StatefulWidget {
@@ -27,8 +26,6 @@ class _Lifecycle extends StatefulWidget {
 class _ControllerState extends State<_Lifecycle> {
   @override
   void initState() {
-    contextQueue.add(context);
-
     widget.onCreate(context);
 
     super.initState();
@@ -37,8 +34,6 @@ class _ControllerState extends State<_Lifecycle> {
   @override
   void dispose() {
     widget.onDestroy(context);
-
-    contextQueue.remove(context);
 
     super.dispose();
   }

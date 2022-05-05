@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:album/core/event.dart';
+import 'package:album/core/event/event.dart';
 import 'package:rxdart/subjects.dart';
 
 abstract class InputPort {

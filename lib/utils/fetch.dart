@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:album/core/debug.dart';
+import 'package:album/core/utilities/debug.dart';
 import 'package:http/http.dart' as http;
 
 abstract class Response {

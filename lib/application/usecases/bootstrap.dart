@@ -1,7 +1,7 @@
 import 'package:album/application/controller.dart';
 import 'package:album/application/controllers/splash/controller.dart';
-import 'package:album/core/event.dart';
-import 'package:album/core/usecase.dart';
+import 'package:album/core/event/event.dart';
+import 'package:album/core/usecase/usecase.dart';
 import 'package:album/firebase_options.dart';
 import 'package:album/repositories/auth.dart';
 import 'package:album/utils/fetch.dart';

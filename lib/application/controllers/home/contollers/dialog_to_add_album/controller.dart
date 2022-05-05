@@ -5,8 +5,8 @@ import 'package:album/application/controllers/home/contollers/dialog_to_add_albu
 import 'package:album/application/controllers/home/contollers/dialog_to_add_album/stores/text_field_state.dart';
 import 'package:album/application/controllers/home/contollers/dialog_to_add_album/usecases/submit_album.dart';
 import 'package:album/core/common/state.dart';
-import 'package:album/core/controller.dart';
-import 'package:album/core/event.dart';
+import 'package:album/core/controller/controller.dart';
+import 'package:album/core/event/event.dart';
 import 'package:flutter/cupertino.dart';
 
 class DialogToAddAlbum extends Controller {

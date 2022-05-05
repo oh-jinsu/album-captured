@@ -5,8 +5,8 @@ import 'package:album/application/controllers/home/contollers/dialog_to_add_albu
 import 'package:album/application/controllers/home/controller.dart';
 import 'package:album/application/controllers/home/events/album_added.dart';
 import 'package:album/application/controllers/home/models/album.dart';
-import 'package:album/core/event.dart';
-import 'package:album/core/usecase.dart';
+import 'package:album/core/event/event.dart';
+import 'package:album/core/usecase/usecase.dart';
 import 'package:album/repositories/auth.dart';
 import 'package:album/utils/fetch.dart';
 
