@@ -8,6 +8,7 @@ import 'package:album/infrastructure/client/client.dart';
 import 'package:album/infrastructure/repositories/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class App extends Controller {
   App({Key? key})
@@ -51,7 +52,7 @@ class App extends Controller {
           final arguments = settings.arguments as AlbumArguments;
 
           return MaterialPageRoute(
-            builder: (context) => Album(arguments),
+            builder: (context) => CupertinoScaffold(body: Album(arguments)),
           );
         }
 

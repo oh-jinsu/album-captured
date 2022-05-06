@@ -1,10 +1,12 @@
 import 'package:album/application/controllers/album/store/photo_list.dart';
 import 'package:album/application/controllers/album/usecases/find_photo_list.dart';
 import 'package:album/application/controllers/album/widgets/list.dart';
+import 'package:album/application/controllers/controllers/editor/controller.dart';
 import 'package:album/application/widgets/button.dart';
 import 'package:album/core/controller/arguments.dart';
 import 'package:album/core/controller/controller.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class AlbumArguments extends Arguments {
   final String id;
@@ -31,46 +33,52 @@ class Album extends Controller<AlbumArguments> {
   @override
   Widget render(BuildContext context) {
     return CupertinoPageScaffold(
-        child: Column(
-      children: [
-        CupertinoNavigationBar(
-          middle: Text(
-            arguments.title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+      child: Column(
+        children: [
+          CupertinoNavigationBar(
+            middle: Text(
+              arguments.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
-        ),
-        Expanded(
-          child: PhotoListStore().subscribe(
-            onNext: (data) => AlbumListWidget(items: data.items),
+          Expanded(
+            child: PhotoListStore().subscribe(
+              onNext: (data) => AlbumListWidget(items: data.items),
+              onLoad: () => Container(),
+            ),
           ),
-        ),
-        SafeArea(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              AppButton(
-                child: const Icon(
-                  CupertinoIcons.person_2,
+          SafeArea(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                AppButton(
+                  child: const Icon(
+                    CupertinoIcons.person_2,
+                  ),
+                  onPressed: () => {},
                 ),
-                onPressed: () => {},
-              ),
-              AppButton(
-                child: const Icon(
-                  CupertinoIcons.plus_square,
+                AppButton(
+                  child: const Icon(
+                    CupertinoIcons.plus_square,
+                  ),
+                  onPressed: () =>
+                      CupertinoScaffold.showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (context) => Editor(),
+                  ),
                 ),
-                onPressed: () => {},
-              ),
-              AppButton(
-                child: const Icon(
-                  CupertinoIcons.ellipsis_circle,
+                AppButton(
+                  child: const Icon(
+                    CupertinoIcons.ellipsis_circle,
+                  ),
+                  onPressed: () => {},
                 ),
-                onPressed: () => {},
-              ),
-            ],
-          ),
-        )
-      ],
-    ));
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
