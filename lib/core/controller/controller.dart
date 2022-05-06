@@ -65,7 +65,7 @@ abstract class Controller<T extends Arguments> extends Lifecycle {
       element.awake();
     }
 
-    _channel.dispatch(const Created());
+    _channel.dispatch(Created(arguments));
 
     super.onCreated(context);
   }

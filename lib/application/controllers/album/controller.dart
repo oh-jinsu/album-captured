@@ -1,3 +1,7 @@
+import 'package:album/application/controllers/album/store/photo_list.dart';
+import 'package:album/application/controllers/album/usecases/find_photo_list.dart';
+import 'package:album/application/controllers/album/widgets/list.dart';
+import 'package:album/application/widgets/button.dart';
 import 'package:album/core/controller/arguments.dart';
 import 'package:album/core/controller/controller.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,7 +20,13 @@ class Album extends Controller<AlbumArguments> {
   Album(
     AlbumArguments arguments, {
     Key? key,
-  }) : super(key: key, arguments: arguments);
+  }) : super(
+          key: key,
+          arguments: arguments,
+          usecases: [
+            FindPhotoListUseCase(),
+          ],
+        );
 
   @override
   Widget render(BuildContext context) {
@@ -30,6 +40,36 @@ class Album extends Controller<AlbumArguments> {
             overflow: TextOverflow.ellipsis,
           ),
         ),
+        Expanded(
+          child: PhotoListStore().subscribe(
+            onNext: (data) => AlbumListWidget(items: data.items),
+          ),
+        ),
+        SafeArea(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              AppButton(
+                child: const Icon(
+                  CupertinoIcons.person_2,
+                ),
+                onPressed: () => {},
+              ),
+              AppButton(
+                child: const Icon(
+                  CupertinoIcons.plus_square,
+                ),
+                onPressed: () => {},
+              ),
+              AppButton(
+                child: const Icon(
+                  CupertinoIcons.ellipsis_circle,
+                ),
+                onPressed: () => {},
+              ),
+            ],
+          ),
+        )
       ],
     ));
   }

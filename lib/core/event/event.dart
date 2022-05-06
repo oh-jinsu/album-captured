@@ -40,8 +40,10 @@ class Popped extends Navigated {
   const Popped();
 }
 
-class Created extends Event {
-  const Created();
+class Created<T extends Arguments> extends Event {
+  final T arguments;
+
+  const Created(this.arguments);
 }
 
 class Started extends Event {
