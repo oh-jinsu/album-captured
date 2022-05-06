@@ -1,6 +1,6 @@
 import 'package:album/application/controllers/home/stores/albums.dart';
-import 'package:album/application/controllers/home/widgets/grid_tile/default_cover.dart';
 import 'package:album/application/controllers/home/widgets/grid_tile_avatar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AlbumTile extends StatelessWidget {
@@ -40,7 +40,9 @@ class AlbumTile extends StatelessWidget {
                             viewModel.coverImageUri!,
                           ),
                         )
-                      : const AlbumDefaultCover(),
+                      : Container(
+                          color: CupertinoColors.secondarySystemBackground,
+                        ),
                 ),
                 const SizedBox(height: 8.0),
                 Row(
