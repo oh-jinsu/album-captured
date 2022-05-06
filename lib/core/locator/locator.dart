@@ -11,7 +11,7 @@ class Locator {
     }
   }
 
-  static T of<T>([String context = "global"]) {
+  static T of<T>([String context = "App"]) {
     final locator = locatorManifest[context];
 
     if (locator == null) {

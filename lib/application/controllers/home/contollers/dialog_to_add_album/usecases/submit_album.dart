@@ -7,8 +7,9 @@ import 'package:album/application/controllers/home/events/album_added.dart';
 import 'package:album/application/controllers/home/models/album.dart';
 import 'package:album/core/event/event.dart';
 import 'package:album/core/usecase/usecase.dart';
-import 'package:album/repositories/auth.dart';
-import 'package:album/utils/fetch.dart';
+import 'package:album/infrastructure/client/client.dart';
+import 'package:album/infrastructure/client/response.dart';
+import 'package:album/infrastructure/repositories/auth.dart';
 
 class SubmitAlbumUseCase extends UseCase {
   @override
@@ -17,9 +18,9 @@ class SubmitAlbumUseCase extends UseCase {
       (event) async {
         of<DialogToAddAlbum>().dispatch(const Pending());
 
-        final accessToken = await authRepository.findAccessToken();
+        final accessToken = await use<AuthRepository>().findAccessToken();
 
-        final response = await post(
+        final response = await use<Client>().post(
           Uri.parse("http://localhost:3000/v1/album"),
           headers: {
             "Authorization": "Bearer $accessToken",

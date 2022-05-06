@@ -1,8 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-final authRepository = _AuthRepository();
-
-class _AuthRepository {
+class AuthRepository {
   final _storage = const FlutterSecureStorage();
 
   String? _accessToken;
