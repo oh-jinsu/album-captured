@@ -1,3 +1,4 @@
+import 'package:album/application/controllers/album/controller.dart';
 import 'package:album/application/controllers/home/contollers/dialog_to_add_album/controller.dart';
 import 'package:album/application/controllers/home/stores/albums.dart';
 import 'package:album/application/controllers/home/usecases/find_albums.dart';
@@ -5,6 +6,7 @@ import 'package:album/application/controllers/home/widgets/grid_tile/grid_tile.d
 import 'package:album/application/controllers/home/widgets/grid_view.dart';
 import 'package:album/application/widgets/button.dart';
 import 'package:album/core/controller/controller.dart';
+import 'package:album/core/event/event.dart';
 import 'package:flutter/cupertino.dart';
 
 class Home extends Controller {
@@ -36,6 +38,13 @@ class Home extends Controller {
               children: [
                 for (final item in data)
                   AlbumTile(
+                    onTap: () => of<Home>().dispatch(Pushed(
+                      "/album",
+                      arguments: AlbumArguments(
+                        id: item.id,
+                        title: item.title,
+                      ),
+                    )),
                     viewModel: item,
                   ),
               ],

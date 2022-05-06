@@ -1,3 +1,4 @@
+import 'package:album/application/controllers/album/controller.dart';
 import 'package:album/application/controllers/home/controller.dart';
 import 'package:album/application/controllers/splash/controller.dart';
 import 'package:album/application/usecases/bootstrap.dart';
@@ -6,6 +7,7 @@ import 'package:album/core/locator/singleton.dart';
 import 'package:album/infrastructure/client/client.dart';
 import 'package:album/infrastructure/repositories/auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class App extends Controller {
   App({Key? key})
@@ -42,6 +44,14 @@ class App extends Controller {
           return PageRouteBuilder(
             transitionDuration: Duration.zero,
             pageBuilder: (context, animation, secondaryAnimation) => Home(),
+          );
+        }
+
+        if (name == "/album") {
+          final arguments = settings.arguments as AlbumArguments;
+
+          return MaterialPageRoute(
+            builder: (context) => Album(arguments),
           );
         }
 

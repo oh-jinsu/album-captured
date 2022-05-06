@@ -4,10 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AlbumTile extends StatelessWidget {
+  final void Function()? onTap;
   final AlbumViewModel viewModel;
 
   const AlbumTile({
     Key? key,
+    this.onTap,
     required this.viewModel,
   }) : super(key: key);
 
@@ -17,7 +19,7 @@ class AlbumTile extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         GestureDetector(
-          onTap: () {},
+          onTap: onTap,
           child: Container(
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(

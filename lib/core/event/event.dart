@@ -1,3 +1,5 @@
+import 'package:album/core/controller/arguments.dart';
+
 abstract class Event {
   const Event();
 }
@@ -15,13 +17,23 @@ abstract class Navigated extends Event {
 class Pushed extends Navigated {
   final String name;
 
-  const Pushed(this.name);
+  final Arguments arguments;
+
+  const Pushed(
+    this.name, {
+    this.arguments = const Arguments(),
+  });
 }
 
 class Replaced extends Navigated {
   final String name;
 
-  const Replaced(this.name);
+  final Arguments arguments;
+
+  const Replaced(
+    this.name, {
+    this.arguments = const Arguments(),
+  });
 }
 
 class Popped extends Navigated {

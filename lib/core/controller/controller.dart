@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:album/core/channel/channel.dart';
+import 'package:album/core/controller/arguments.dart';
 import 'package:album/core/event/event.dart';
 import 'package:album/core/controller/lifecycle.dart';
 import 'package:album/core/locator/locator.dart';
@@ -9,7 +10,11 @@ import 'package:album/core/locator/singleton.dart';
 import 'package:album/core/usecase/usecase.dart';
 import 'package:flutter/widgets.dart';
 
-abstract class Controller extends Lifecycle {
+abstract class Controller<T extends Arguments> extends Lifecycle {
+  final Arguments _arguments;
+
+  T get arguments => _arguments as T;
+
   final _channel = Channel();
 
   final List<StreamSubscription> _subscriptions = [];
@@ -20,12 +25,14 @@ abstract class Controller extends Lifecycle {
 
   Controller({
     Key? key,
+    Arguments arguments = const Arguments(),
     this.services = const [],
     this.usecases = const [],
-  }) : super(key: key);
+  })  : _arguments = arguments,
+        super(key: key);
 
-  InputPort of<T>() {
-    final scope = T.toString();
+  InputPort of<K>() {
+    final scope = K.toString();
 
     return Locator.of<Channel>(scope);
   }
@@ -35,11 +42,12 @@ abstract class Controller extends Lifecycle {
   void onCreated(BuildContext context) {
     final subscription = _channel.on<Navigated>((event) {
       if (event is Pushed) {
-        Navigator.of(context).pushNamed(event.name);
+        Navigator.of(context).pushNamed(event.name, arguments: event.arguments);
       }
 
       if (event is Replaced) {
-        Navigator.of(context).pushReplacementNamed(event.name);
+        Navigator.of(context)
+            .pushReplacementNamed(event.name, arguments: event.arguments);
       }
 
       if (event is Popped) {
