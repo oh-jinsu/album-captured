@@ -1,3 +1,8 @@
+import 'dart:io';
+
+import 'package:album/application/controllers/controllers/editor/events/picker_tapped.dart';
+import 'package:album/application/controllers/controllers/editor/stores/preview.dart';
+import 'package:album/application/controllers/controllers/editor/usecases/pick_photo.dart';
 import 'package:album/application/controllers/controllers/editor/widgets/container.dart';
 import 'package:album/application/controllers/controllers/editor/widgets/date_picker.dart';
 import 'package:album/application/controllers/controllers/editor/widgets/drawer.dart';
@@ -10,47 +15,47 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Editor extends Controller {
-  Editor({Key? key}) : super(key: key);
+  Editor({Key? key})
+      : super(
+          key: key,
+          usecases: [
+            PickPhotoUseCase(),
+          ],
+        );
 
   @override
   Widget render(BuildContext context) {
     return PhotoEditorContainer(
+      onCanceled: () => of<Editor>().dispatch(const Popped()),
       children: [
-        const PhotoEditorDrawer(),
-        const SizedBox(height: 12.0),
-        AppButton(
-          onPressed: () => of<Editor>().dispatch(const Popped()),
-          child: const Text("취소"),
-        ),
-        const SizedBox(height: 16.0),
-        const PhotoEditorLabel(),
-        const SizedBox(height: 16.0),
         GestureDetector(
-          onTap: () {},
+          onTap: () => of<Editor>().dispatch(const PickerTapped()),
           child: Container(
             color: Colors.grey[100],
             width: double.infinity,
-            child: const AspectRatio(
+            child: AspectRatio(
               aspectRatio: 1.0,
-              child: Center(
-                child: Icon(
-                  Icons.add_a_photo,
-                  color: Colors.blue,
+              child: PreviewStore().subscribe(
+                onNext: (data) => Image(
+                  fit: BoxFit.cover,
+                  image: FileImage(File(data.path)),
+                ),
+                onLoad: () => const Center(
+                  child: Icon(
+                    Icons.add_a_photo,
+                    color: Colors.blue,
+                  ),
                 ),
               ),
             ),
           ),
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 12.0),
         const PhotoEditorDatePicker(),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 12.0),
         const CupertinoTextField(
           clearButtonMode: OverlayVisibilityMode.editing,
           placeholder: "기억에 남는 일이 있다면 짧은 감상을 남겨 보세요.",
-          style: TextStyle(
-            height: 1.25,
-            fontSize: 14.0,
-          ),
           keyboardType: TextInputType.text,
           minLines: 3,
           maxLines: 3,

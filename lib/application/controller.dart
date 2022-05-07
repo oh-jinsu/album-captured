@@ -6,8 +6,10 @@ import 'package:album/core/controller/controller.dart';
 import 'package:album/core/locator/singleton.dart';
 import 'package:album/infrastructure/client/client.dart';
 import 'package:album/infrastructure/repositories/auth.dart';
+import 'package:album/infrastructure/repositories/image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class App extends Controller {
@@ -17,6 +19,7 @@ class App extends Controller {
           services: [
             Singleton<Client>(Client()),
             Singleton<AuthRepository>(AuthRepository()),
+            Singleton<ImageRepository>(ImageRepository()),
           ],
           usecases: [
             BootstrapUseCase(),
@@ -32,6 +35,14 @@ class App extends Controller {
           data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
         );
       },
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('ko'),
+        Locale('en'),
+      ],
       onGenerateRoute: (settings) {
         final name = settings.name;
 

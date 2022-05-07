@@ -14,7 +14,7 @@ class FindPhotoListUseCase extends UseCase {
       final accessToken = await use<AuthRepository>().findAccessToken();
 
       final response = await use<Client>().get(
-        "album_id=${event.arguments.id}",
+        "photo?album_id=${event.arguments.id}",
         headers: {
           "Authorization": "Bearer $accessToken",
         },

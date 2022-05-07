@@ -64,6 +64,7 @@ class Album extends Controller<AlbumArguments> {
                   ),
                   onPressed: () =>
                       CupertinoScaffold.showCupertinoModalBottomSheet(
+                    expand: true,
                     context: context,
                     builder: (context) => Editor(),
                   ),
