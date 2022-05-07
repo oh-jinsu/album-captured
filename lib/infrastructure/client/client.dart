@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:album/core/utilities/debug.dart';
 import 'package:album/infrastructure/client/response.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 typedef Fetcher = Future<http.Response> Function(
@@ -10,18 +11,18 @@ typedef Fetcher = Future<http.Response> Function(
 });
 
 class Client {
-  Future<Response> get(Uri uri, {Map<String, String>? headers}) async {
-    Debug.log("GET $uri");
+  Future<Response> get(String endpoint, {Map<String, String>? headers}) async {
+    Debug.log("GET $endpoint");
 
-    return _fetch(uri, http.get, headers: headers);
+    return _fetch(endpoint, http.get, headers: headers);
   }
 
-  Future<Response> post(Uri uri,
+  Future<Response> post(String endpoint,
       {Map<String, String>? headers, Object? body}) async {
-    Debug.log("POST $uri");
+    Debug.log("POST $endpoint");
 
     return _fetch(
-      uri,
+      endpoint,
       (Uri uri, {Map<String, String>? headers}) => http.post(
         uri,
         headers: headers,
@@ -32,12 +33,14 @@ class Client {
   }
 
   Future<Response> _fetch(
-    Uri uri,
+    String endpoint,
     Fetcher fetcher, {
     Map<String, String>? headers,
   }) async {
     try {
-      final response = await fetcher(uri, headers: headers);
+      final response = await fetcher(
+          Uri.parse("${dotenv.get("API_HOST")}/$endpoint"),
+          headers: headers);
 
       Debug.log(response.statusCode);
 
@@ -59,7 +62,7 @@ class Client {
 
       await Future.delayed(const Duration(milliseconds: 1000));
 
-      return _fetch(uri, fetcher, headers: headers);
+      return _fetch(endpoint, fetcher, headers: headers);
     }
   }
 }

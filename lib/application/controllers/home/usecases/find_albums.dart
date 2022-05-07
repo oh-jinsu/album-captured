@@ -12,11 +12,9 @@ class FindAlbumsUseCase extends UseCase {
   @override
   onAwaken() {
     of<Home>().on<Created>((event) async {
-      final uri = Uri.parse("http://localhost:3000/v1/album");
-
       final accessToken = await use<AuthRepository>().findAccessToken();
 
-      final response = await use<Client>().get(uri, headers: {
+      final response = await use<Client>().get("album", headers: {
         "Authorization": "Bearer $accessToken",
       });
 

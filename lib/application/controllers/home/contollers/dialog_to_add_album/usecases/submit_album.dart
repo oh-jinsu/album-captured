@@ -21,7 +21,7 @@ class SubmitAlbumUseCase extends UseCase {
         final accessToken = await use<AuthRepository>().findAccessToken();
 
         final response = await use<Client>().post(
-          Uri.parse("http://localhost:3000/v1/album"),
+          "album",
           headers: {
             "Authorization": "Bearer $accessToken",
           },
