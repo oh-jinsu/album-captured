@@ -1,7 +1,7 @@
 import 'package:album/application/controllers/album/store/photo_list.dart';
 import 'package:album/application/controllers/album/usecases/find_photo_list.dart';
 import 'package:album/application/controllers/album/widgets/list.dart';
-import 'package:album/application/controllers/controllers/editor/controller.dart';
+import 'package:album/application/controllers/editor/controller.dart';
 import 'package:album/application/widgets/button.dart';
 import 'package:album/core/controller/arguments.dart';
 import 'package:album/core/controller/controller.dart';
@@ -23,8 +23,8 @@ class Album extends Controller<AlbumArguments> {
     AlbumArguments arguments, {
     Key? key,
   }) : super(
+          arguments,
           key: key,
-          arguments: arguments,
           usecases: [
             FindPhotoListUseCase(),
           ],
@@ -66,7 +66,11 @@ class Album extends Controller<AlbumArguments> {
                       CupertinoScaffold.showCupertinoModalBottomSheet(
                     expand: true,
                     context: context,
-                    builder: (context) => Editor(),
+                    builder: (context) => Editor(
+                      EditorArguments(
+                        albumId: arguments.id,
+                      ),
+                    ),
                   ),
                 ),
                 AppButton(

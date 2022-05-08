@@ -38,6 +38,7 @@ class AlbumTile extends StatelessWidget {
                   aspectRatio: 1.0,
                   child: viewModel.coverImageUri != null
                       ? Image(
+                          fit: BoxFit.cover,
                           image: NetworkImage(
                             viewModel.coverImageUri!,
                           ),

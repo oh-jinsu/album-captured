@@ -22,7 +22,7 @@ class BootstrapUseCase extends UseCase {
       final refreshToken = await use<AuthRepository>().findRefreshToken();
 
       if (refreshToken == null) {
-        _signUpWithGuest();
+        await _signUpWithGuest();
       } else {
         final response = await use<Client>().post(
           "auth/refresh",
@@ -32,13 +32,13 @@ class BootstrapUseCase extends UseCase {
         );
 
         if (response is FailureResponse) {
-          _signUpWithGuest();
+          await _signUpWithGuest();
         }
 
         if (response is SuccessResponse) {
           final accessToken = response.body["access_token"];
 
-          use<AuthRepository>().saveAccessToken(accessToken);
+          await use<AuthRepository>().saveAccessToken(accessToken);
         }
       }
 
@@ -46,7 +46,7 @@ class BootstrapUseCase extends UseCase {
     });
   }
 
-  void _signUpWithGuest() async {
+  Future<void> _signUpWithGuest() async {
     final response = await use<Client>().get("auth/guest");
 
     if (response is! SuccessResponse) {
@@ -57,9 +57,9 @@ class BootstrapUseCase extends UseCase {
 
     final refreshToken = response.body["refresh_token"];
 
-    use<AuthRepository>().saveAccessToken(accessToken);
+    await use<AuthRepository>().saveAccessToken(accessToken);
 
-    use<AuthRepository>().saveRefreshToken(refreshToken);
+    await use<AuthRepository>().saveRefreshToken(refreshToken);
 
     await use<Client>().post(
       "user/guest",

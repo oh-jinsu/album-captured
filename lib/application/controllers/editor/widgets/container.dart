@@ -1,7 +1,6 @@
-import 'package:album/application/controllers/controllers/editor/controller.dart';
-import 'package:album/application/controllers/controllers/editor/widgets/bottom_inset.dart';
-import 'package:album/application/controllers/controllers/editor/widgets/drawer.dart';
-import 'package:album/application/controllers/controllers/editor/widgets/label.dart';
+import 'package:album/application/controllers/editor/widgets/bottom_inset.dart';
+import 'package:album/application/controllers/editor/widgets/drawer.dart';
+import 'package:album/application/controllers/editor/widgets/label.dart';
 import 'package:album/application/widgets/button.dart';
 import 'package:flutter/material.dart';
 
@@ -44,7 +43,9 @@ class _PhotoEditorContainerState extends State<PhotoEditorContainer> {
           const SizedBox(height: 12.0),
           AppButton(
             onPressed: () => widget.onCanceled?.call(),
-            child: const Text("취소"),
+            child: const Text(
+              "취소",
+            ),
           ),
           const SizedBox(height: 16.0),
           const PhotoEditorLabel(),

@@ -6,16 +6,22 @@ import 'package:album/core/store/store.dart';
 class PhotoViewModel {
   final String id;
   final String publicImageUri;
+  final DateTime date;
+  final String? description;
 
   const PhotoViewModel({
     required this.id,
     required this.publicImageUri,
+    required this.date,
+    required this.description,
   });
 
   factory PhotoViewModel.fromModel(PhotoModel model) {
     return PhotoViewModel(
       id: model.id,
       publicImageUri: model.publicImageUri,
+      date: model.date,
+      description: model.description,
     );
   }
 }

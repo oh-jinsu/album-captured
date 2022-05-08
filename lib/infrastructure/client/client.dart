@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:album/core/utilities/debug.dart';
 import 'package:album/infrastructure/client/response.dart';
@@ -11,52 +12,76 @@ typedef Fetcher = Future<http.Response> Function(
 });
 
 class Client {
-  Future<Response> get(String endpoint, {Map<String, String>? headers}) async {
+  Future<Response> get(String endpoint,
+      {Map<String, String> headers = const {}}) async {
     Debug.log("GET $endpoint");
 
     return _fetch(endpoint, http.get, headers: headers);
   }
 
   Future<Response> post(String endpoint,
-      {Map<String, String>? headers, Object? body}) async {
+      {Map<String, String> headers = const {}, Object body = const {}}) async {
     Debug.log("POST $endpoint");
+
+    final postHeaders = <String, String>{};
+
+    postHeaders.addAll(headers);
+
+    postHeaders["Content-Type"] = "application/json;charset=utf-8";
+
+    Debug.log(jsonEncode(body));
 
     return _fetch(
       endpoint,
       (Uri uri, {Map<String, String>? headers}) => http.post(
         uri,
         headers: headers,
-        body: body,
+        body: jsonEncode(body),
       ),
-      headers: headers,
+      headers: postHeaders,
     );
   }
+
+  Future<Response> postMultipart(
+    String endpoint,
+    File file, {
+    Map<String, String> headers = const {},
+  }) async {
+    final request = http.MultipartRequest("POST", _getUri(endpoint));
+
+    request.headers.addAll(headers);
+
+    final mutlipartFile = await http.MultipartFile.fromPath("file", file.path);
+
+    request.files.add(mutlipartFile);
+
+    try {
+      final streamedResponse = await request.send();
+
+      final response = await http.Response.fromStream(streamedResponse);
+
+      return _parseResponse(response);
+    } catch (e) {
+      Debug.log(e);
+
+      await Future.delayed(const Duration(milliseconds: 1000));
+
+      return postMultipart(endpoint, file);
+    }
+  }
+
+  Uri _getUri(String endpoint) =>
+      Uri.parse("${dotenv.get("API_HOST")}/$endpoint");
 
   Future<Response> _fetch(
     String endpoint,
     Fetcher fetcher, {
-    Map<String, String>? headers,
+    required Map<String, String> headers,
   }) async {
     try {
-      final response = await fetcher(
-          Uri.parse("${dotenv.get("API_HOST")}/$endpoint"),
-          headers: headers);
+      final response = await fetcher(_getUri(endpoint), headers: headers);
 
-      Debug.log(response.statusCode);
-
-      final body = jsonDecode(response.body);
-
-      Debug.log(body);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return SuccessResponse(body: body);
-      }
-
-      final code = body["code"];
-
-      final message = body["message"];
-
-      return FailureResponse(code: code, message: message);
+      return _parseResponse(response);
     } catch (e) {
       Debug.log(e);
 
@@ -64,5 +89,23 @@ class Client {
 
       return _fetch(endpoint, fetcher, headers: headers);
     }
+  }
+
+  Response _parseResponse(http.Response response) {
+    Debug.log(response.statusCode);
+
+    final body = jsonDecode(response.body);
+
+    Debug.log(body);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return SuccessResponse(body: body);
+    }
+
+    final code = body["code"];
+
+    final message = body["message"];
+
+    return FailureResponse(code: code, message: message);
   }
 }

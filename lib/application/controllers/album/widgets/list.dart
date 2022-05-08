@@ -17,7 +17,7 @@ class AlbumListWidget extends StatefulWidget {
 class _AlbumListWidgetState extends State<AlbumListWidget> {
   bool _isLoaded = false;
 
-  final List<String> _imageUris = [];
+  final List<PhotoViewModel> _items = [];
 
   @override
   void initState() {
@@ -29,7 +29,7 @@ class _AlbumListWidgetState extends State<AlbumListWidget> {
   void initialize() async {
     await Future.delayed(const Duration(milliseconds: 16));
 
-    final imageUris = await Future.wait(widget.items.map(
+    await Future.wait(widget.items.map(
       (item) async {
         final uri = item.publicImageUri;
 
@@ -39,7 +39,7 @@ class _AlbumListWidgetState extends State<AlbumListWidget> {
       },
     ));
 
-    _imageUris.addAll(imageUris);
+    _items.addAll(widget.items);
 
     setState(() {
       _isLoaded = true;
@@ -48,7 +48,7 @@ class _AlbumListWidgetState extends State<AlbumListWidget> {
 
   void onRemove(int index) async {
     setState(() {
-      _imageUris.removeAt(index);
+      _items.removeAt(index);
     });
 
     if (index != 0) {
@@ -64,11 +64,13 @@ class _AlbumListWidgetState extends State<AlbumListWidget> {
       child: _isLoaded
           ? Stack(
               children: [
-                for (int i = 0; i < _imageUris.length; i++)
+                for (int i = 0; i < _items.length; i++)
                   AlbumFloorWidget(
                     index: i,
-                    imageUri: _imageUris[i],
-                    popDuration: 1000 ~/ _imageUris.length,
+                    imageUri: _items[i].publicImageUri,
+                    date: _items[i].date,
+                    description: _items[i].description,
+                    popDuration: 1000 ~/ _items.length,
                     onRemove: onRemove,
                   ),
               ],

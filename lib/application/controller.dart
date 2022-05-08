@@ -2,6 +2,7 @@ import 'package:album/application/controllers/album/controller.dart';
 import 'package:album/application/controllers/home/controller.dart';
 import 'package:album/application/controllers/splash/controller.dart';
 import 'package:album/application/usecases/bootstrap.dart';
+import 'package:album/core/controller/arguments.dart';
 import 'package:album/core/controller/controller.dart';
 import 'package:album/core/locator/singleton.dart';
 import 'package:album/infrastructure/client/client.dart';
@@ -15,6 +16,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 class App extends Controller {
   App({Key? key})
       : super(
+          const Arguments(),
           key: key,
           services: [
             Singleton<Client>(Client()),

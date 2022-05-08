@@ -1,6 +1,6 @@
-import 'package:album/application/controllers/controllers/editor/controller.dart';
-import 'package:album/application/controllers/controllers/editor/events/picker_tapped.dart';
-import 'package:album/application/controllers/controllers/editor/events/preview_added.dart';
+import 'package:album/application/controllers/editor/controller.dart';
+import 'package:album/application/controllers/editor/events/picker_tapped.dart';
+import 'package:album/application/controllers/editor/events/preview_added.dart';
 import 'package:album/core/usecase/usecase.dart';
 import 'package:album/infrastructure/repositories/image.dart';
 

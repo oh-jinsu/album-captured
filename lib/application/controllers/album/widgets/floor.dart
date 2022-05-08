@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 class AlbumFloorWidget extends StatefulWidget {
   final int index;
   final String imageUri;
+  final String? description;
+  final DateTime date;
   final int popDuration;
   final void Function(int) onRemove;
 
@@ -12,6 +14,8 @@ class AlbumFloorWidget extends StatefulWidget {
     Key? key,
     required this.index,
     required this.imageUri,
+    this.description,
+    required this.date,
     required this.popDuration,
     required this.onRemove,
   }) : super(key: key);
@@ -304,21 +308,25 @@ class _AlbumFloorWidgetState extends State<AlbumFloorWidget>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Image(
-                    image: NetworkImage(widget.imageUri),
-                    fit: BoxFit.cover,
+                  AspectRatio(
+                    aspectRatio: 1.0,
+                    child: Image(
+                      image: NetworkImage(widget.imageUri),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   const SizedBox(height: 16.0),
-                  const Text(
-                    "2021.10.14",
+                  Text(
+                    "${widget.date.year}.${widget.date.month}.${widget.date.day}",
                     textAlign: TextAlign.right,
                   ),
                   const SizedBox(height: 16.0),
-                  const Text(
-                    "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
-                    textAlign: TextAlign.right,
-                    maxLines: 2,
-                  )
+                  if (widget.description != null)
+                    Text(
+                      widget.description!,
+                      textAlign: TextAlign.right,
+                      maxLines: 2,
+                    ),
                 ],
               ),
             ),

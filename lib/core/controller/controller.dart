@@ -7,13 +7,12 @@ import 'package:album/core/controller/lifecycle.dart';
 import 'package:album/core/locator/locator.dart';
 import 'package:album/core/locator/service.dart';
 import 'package:album/core/locator/singleton.dart';
+import 'package:album/core/store/store.dart';
 import 'package:album/core/usecase/usecase.dart';
 import 'package:flutter/widgets.dart';
 
 abstract class Controller<T extends Arguments> extends Lifecycle {
-  final Arguments _arguments;
-
-  T get arguments => _arguments as T;
+  final T arguments;
 
   final _channel = Channel();
 
@@ -23,18 +22,26 @@ abstract class Controller<T extends Arguments> extends Lifecycle {
 
   final List<UseCase> usecases;
 
-  Controller({
+  final List<Store> stores;
+
+  Controller(
+    this.arguments, {
     Key? key,
-    Arguments arguments = const Arguments(),
     this.services = const [],
     this.usecases = const [],
-  })  : _arguments = arguments,
-        super(key: key);
+    this.stores = const [],
+  }) : super(key: key);
 
   InputPort of<K>() {
     final scope = K.toString();
 
     return Locator.of<Channel>(scope);
+  }
+
+  K get<K extends Store>() {
+    final scope = toString();
+
+    return Locator.of<K>(scope);
   }
 
   @override
@@ -57,8 +64,10 @@ abstract class Controller<T extends Arguments> extends Lifecycle {
 
     _subscriptions.add(subscription);
 
+    final storeServices = stores.map((e) => Singleton.runtime(e));
+
     locatorManifest[toString()] = Locator(
-      [Singleton<Channel>(_channel), ...services],
+      [Singleton<Channel>(_channel), ...storeServices, ...services],
     );
 
     for (final element in usecases) {

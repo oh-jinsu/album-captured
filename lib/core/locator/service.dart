@@ -1,5 +1,7 @@
 abstract class Service<T> {
-  String get key => T.toString();
+  final String key;
+
+  const Service(this.key);
 
   T require();
 }

@@ -5,6 +5,7 @@ import 'package:album/application/controllers/home/usecases/find_albums.dart';
 import 'package:album/application/controllers/home/widgets/grid_tile/grid_tile.dart';
 import 'package:album/application/controllers/home/widgets/grid_view.dart';
 import 'package:album/application/widgets/button.dart';
+import 'package:album/core/controller/arguments.dart';
 import 'package:album/core/controller/controller.dart';
 import 'package:album/core/event/event.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 class Home extends Controller {
   Home({Key? key})
       : super(
+          const Arguments(),
           key: key,
           usecases: [
             FindAlbumsUseCase(),
