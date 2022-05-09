@@ -11,6 +11,18 @@ class Locator {
     }
   }
 
+  T require<T>() {
+    final key = T.toString();
+
+    final service = _manifest[key];
+
+    if (service == null) {
+      throw Exception("$T not found");
+    }
+
+    return service.require();
+  }
+
   static T of<T>([String context = "App"]) {
     final locator = locatorManifest[context];
 

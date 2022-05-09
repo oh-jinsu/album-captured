@@ -1,6 +1,8 @@
 import 'package:album/application/controllers/album/controller.dart';
 import 'package:album/application/controllers/home/controller.dart';
+import 'package:album/application/controllers/profile/controller.dart';
 import 'package:album/application/controllers/splash/controller.dart';
+import 'package:album/application/stores/user.dart';
 import 'package:album/application/usecases/bootstrap.dart';
 import 'package:album/core/controller/arguments.dart';
 import 'package:album/core/controller/controller.dart';
@@ -19,6 +21,9 @@ class App extends Controller {
       : super(
           const Arguments(),
           key: key,
+          stores: [
+            UserStore(),
+          ],
           services: [
             Singleton<Client>(Client()),
             Singleton<AuthRepository>(AuthRepository()),
@@ -60,6 +65,12 @@ class App extends Controller {
           return PageRouteBuilder(
             transitionDuration: Duration.zero,
             pageBuilder: (context, animation, secondaryAnimation) => Home(),
+          );
+        }
+
+        if (name == "/profile") {
+          return PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => Profile(),
           );
         }
 

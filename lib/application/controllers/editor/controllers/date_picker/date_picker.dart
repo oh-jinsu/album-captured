@@ -36,7 +36,7 @@ class PhotoEditorDatePicker extends Controller {
             return;
           }
 
-          of<Editor>().dispatch(DateChanged(value: date));
+          to<Editor>().dispatch(DateChanged(value: date));
         } else {
           showDatePicker(
             context: context,

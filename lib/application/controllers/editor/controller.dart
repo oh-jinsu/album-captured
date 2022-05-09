@@ -41,7 +41,7 @@ class Editor extends Controller<EditorArguments> {
   Widget render(BuildContext context) {
     return get<FormStore>().subscribe(
       onNext: (data) => PhotoEditorContainer(
-        onCanceled: () => of<Editor>().dispatch(const Popped()),
+        onCanceled: () => to<Editor>().dispatch(const Popped()),
         children: [
           GestureDetector(
             onTap: () {
@@ -49,7 +49,7 @@ class Editor extends Controller<EditorArguments> {
                 return;
               }
 
-              of<Editor>().dispatch(const PickerTapped());
+              to<Editor>().dispatch(const PickerTapped());
             },
             child: Container(
               color: Colors.grey[100],
@@ -84,7 +84,7 @@ class Editor extends Controller<EditorArguments> {
             maxLines: 3,
             enabled: data.isDescriptionFieldEnabled,
             onChanged: (text) =>
-                of<Editor>().dispatch(DescriptionChanged(value: text)),
+                to<Editor>().dispatch(DescriptionChanged(value: text)),
           ),
           const SizedBox(height: 16.0),
           PhotoEditorSubmitButton(
@@ -99,7 +99,7 @@ class Editor extends Controller<EditorArguments> {
 
               final description = data.description;
 
-              of<Editor>().dispatch(
+              to<Editor>().dispatch(
                 Submitted(
                   albumId: arguments.albumId,
                   image: image,

@@ -60,15 +60,8 @@ abstract class Store<T> implements Disposable {
   final List<_Channel> _channels = [];
 
   late final _subject = _initial == null
-      ? BehaviorSubject<StoreData<T>>(
-          onListen: _onListen,
-          onCancel: _onCancel,
-        )
-      : BehaviorSubject<StoreData<T>>.seeded(
-          _initial!,
-          onListen: _onListen,
-          onCancel: _onCancel,
-        );
+      ? BehaviorSubject<StoreData<T>>()
+      : BehaviorSubject<StoreData<T>>.seeded(_initial!);
 
   Store([InitialData<T>? initial]) : _initial = initial;
 
@@ -80,15 +73,11 @@ abstract class Store<T> implements Disposable {
     return listener;
   }
 
-  void _onListen() {
+  void awake() {
     onListen();
   }
 
   void onListen();
-
-  void _onCancel() {
-    dispose();
-  }
 
   @override
   void dispose() {

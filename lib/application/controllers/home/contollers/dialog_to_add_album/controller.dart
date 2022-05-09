@@ -29,7 +29,7 @@ class DialogToAddAlbum extends Controller {
 
   @override
   void onCreated(BuildContext context) {
-    textEditingController.addListener(() => of<DialogToAddAlbum>()
+    textEditingController.addListener(() => to<DialogToAddAlbum>()
         .dispatch(TitleChanged(value: textEditingController.text)));
 
     super.onCreated(context);
@@ -86,7 +86,7 @@ class DialogToAddAlbum extends Controller {
       ),
       actions: [
         CupertinoButton(
-          onPressed: () => of<DialogToAddAlbum>().dispatch(const Popped()),
+          onPressed: () => to<DialogToAddAlbum>().dispatch(const Popped()),
           child: const Text(
             "취소",
             style: TextStyle(
@@ -99,7 +99,7 @@ class DialogToAddAlbum extends Controller {
             switch (data) {
               case ButtonState.enabled:
                 return CupertinoButton(
-                  onPressed: () => of<DialogToAddAlbum>().dispatch(
+                  onPressed: () => to<DialogToAddAlbum>().dispatch(
                     Submitted(title: textEditingController.text),
                   ),
                   child: const Text(

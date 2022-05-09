@@ -32,7 +32,17 @@ abstract class Controller<T extends Arguments> extends Lifecycle {
     this.stores = const [],
   }) : super(key: key);
 
-  InputPort of<K>() {
+  Locator of<K>() {
+    final locator = locatorManifest[K.toString()];
+
+    if (locator == null) {
+      throw Exception("${K.toString()} not found");
+    }
+
+    return locator;
+  }
+
+  InputPort to<K>() {
     final scope = K.toString();
 
     return Locator.of<Channel>(scope);
@@ -70,6 +80,10 @@ abstract class Controller<T extends Arguments> extends Lifecycle {
       [Singleton<Channel>(_channel), ...storeServices, ...services],
     );
 
+    for (final element in stores) {
+      element.awake();
+    }
+
     for (final element in usecases) {
       element.awake();
     }
@@ -91,6 +105,10 @@ abstract class Controller<T extends Arguments> extends Lifecycle {
   @mustCallSuper
   void onDestroyed(BuildContext context) {
     for (final element in usecases) {
+      element.dispose();
+    }
+
+    for (final element in stores) {
       element.dispose();
     }
 

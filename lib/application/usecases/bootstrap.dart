@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:album/application/controller.dart';
 import 'package:album/application/controllers/splash/controller.dart';
+import 'package:album/application/events/user_found.dart';
+import 'package:album/application/models/user.dart';
 import 'package:album/core/event/event.dart';
 import 'package:album/core/usecase/usecase.dart';
 import 'package:album/firebase_options.dart';
@@ -35,10 +39,30 @@ class BootstrapUseCase extends UseCase {
           await _signUpWithGuest();
         }
 
-        if (response is SuccessResponse) {
-          final accessToken = response.body["access_token"];
+        if (response is! SuccessResponse) {
+          return;
+        }
 
-          await use<AuthRepository>().saveAccessToken(accessToken);
+        final accessToken = response.body["access_token"];
+
+        await use<AuthRepository>().saveAccessToken(accessToken);
+
+        final normal = base64Url.normalize(accessToken.split(".")[1]);
+
+        final payload = jsonDecode(utf8.decode(base64Url.decode(normal)));
+
+        if (payload["grd"] == "member") {
+          final userResponse = await use<Client>().get("user/me", headers: {
+            "Authorization": "Bearer $accessToken",
+          });
+
+          if (userResponse is! SuccessResponse) {
+            return;
+          }
+
+          final user = UserModel.fromJson(userResponse.body);
+
+          of<App>().dispatch(UserFound(body: user));
         }
       }
 
@@ -61,11 +85,25 @@ class BootstrapUseCase extends UseCase {
 
     await use<AuthRepository>().saveRefreshToken(refreshToken);
 
-    await use<Client>().post(
-      "user/guest",
-      headers: {
-        "Authorization": "Bearer $accessToken",
-      },
-    );
+    final normal = base64Url.normalize(accessToken.split(".")[1]);
+
+    final payload = jsonDecode(utf8.decode(base64Url.decode(normal)));
+
+    if (payload["grd"] == "member") {
+      final userResponse = await use<Client>().post(
+        "user/guest",
+        headers: {
+          "Authorization": "Bearer $accessToken",
+        },
+      );
+
+      if (userResponse is! SuccessResponse) {
+        return;
+      }
+
+      final user = UserModel.fromJson(response.body);
+
+      of<App>().dispatch(UserFound(body: user));
+    }
   }
 }
