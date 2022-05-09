@@ -53,6 +53,7 @@ class DialogToAddAlbum extends Controller {
           children: [
             get<TextFieldStateStore>().subscribe(
               onNext: (data) => CupertinoTextField(
+                autofocus: true,
                 enabled: data == TextFieldState.enabled,
                 controller: textEditingController,
                 placeholder: "앨범의 제목을 입력해 주세요.",

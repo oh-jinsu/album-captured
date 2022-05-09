@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class AlbumFloorWidget extends StatefulWidget {
+  final String albumId;
   final int index;
   final String imageUri;
   final String? description;
@@ -12,6 +13,7 @@ class AlbumFloorWidget extends StatefulWidget {
 
   const AlbumFloorWidget({
     Key? key,
+    required this.albumId,
     required this.index,
     required this.imageUri,
     this.description,
@@ -26,8 +28,6 @@ class AlbumFloorWidget extends StatefulWidget {
 
 class _AlbumFloorWidgetState extends State<AlbumFloorWidget>
     with TickerProviderStateMixin {
-  static const seed = 3;
-
   static const _biasDepthsY = 2;
   static const _biasDepthsZ = 1;
 
@@ -45,7 +45,8 @@ class _AlbumFloorWidgetState extends State<AlbumFloorWidget>
 
   bool _isSliding = false;
 
-  double get middleRandom => (Random(seed + widget.index).nextDouble() - 0.5);
+  double get middleRandom =>
+      (Random(widget.albumId.hashCode + widget.index).nextDouble() - 0.5);
 
   Offset _origin = Offset.zero;
 

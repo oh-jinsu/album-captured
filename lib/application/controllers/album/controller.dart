@@ -41,7 +41,7 @@ class Album extends Controller<AlbumArguments> {
           get<PhotoListStore>().subscribe(
             onNext: (data) => Padding(
               padding: const EdgeInsets.only(top: 48.0),
-              child: AlbumListWidget(items: data.items),
+              child: AlbumListWidget(albumId: arguments.id, items: data.items),
             ),
             onLoad: () => Container(),
           ),

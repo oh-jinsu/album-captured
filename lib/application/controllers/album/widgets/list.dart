@@ -3,10 +3,12 @@ import 'package:album/application/controllers/album/widgets/floor.dart';
 import 'package:flutter/cupertino.dart';
 
 class AlbumListWidget extends StatefulWidget {
+  final String albumId;
   final List<PhotoViewModel> items;
 
   const AlbumListWidget({
     Key? key,
+    required this.albumId,
     required this.items,
   }) : super(key: key);
 
@@ -15,8 +17,6 @@ class AlbumListWidget extends StatefulWidget {
 }
 
 class _AlbumListWidgetState extends State<AlbumListWidget> {
-  bool _isLoaded = false;
-
   final List<PhotoViewModel> _items = [];
 
   @override
@@ -31,7 +31,8 @@ class _AlbumListWidgetState extends State<AlbumListWidget> {
     super.didUpdateWidget(oldWidget);
 
     final updatedList = widget.items.where(
-        (newone) => oldWidget.items.every((oldone) => oldone.id != newone.id));
+      (newone) => oldWidget.items.every((oldone) => oldone.id != newone.id),
+    );
 
     setState(() {
       _items.addAll(updatedList);
@@ -39,12 +40,10 @@ class _AlbumListWidgetState extends State<AlbumListWidget> {
   }
 
   void initialize() async {
-    await Future.delayed(const Duration(milliseconds: 16));
-
-    _items.addAll(widget.items.reversed);
+    await Future.delayed(Duration.zero);
 
     setState(() {
-      _isLoaded = true;
+      _items.addAll(widget.items.reversed);
     });
   }
 
@@ -62,22 +61,19 @@ class _AlbumListWidgetState extends State<AlbumListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: _isLoaded
-          ? Stack(
-              children: [
-                for (int i = 0; i < _items.length; i++)
-                  AlbumFloorWidget(
-                    index: i,
-                    imageUri: _items[i].publicImageUri,
-                    date: _items[i].date,
-                    description: _items[i].description,
-                    popDuration: 1000 ~/ _items.length,
-                    onRemove: onRemove,
-                  ),
-              ],
-            )
-          : const CupertinoActivityIndicator(),
+    return Stack(
+      children: [
+        for (int i = 0; i < _items.length; i++)
+          AlbumFloorWidget(
+            albumId: widget.albumId,
+            index: i,
+            imageUri: _items[i].publicImageUri,
+            date: _items[i].date,
+            description: _items[i].description,
+            popDuration: 1000 ~/ _items.length,
+            onRemove: onRemove,
+          ),
+      ],
     );
   }
 }

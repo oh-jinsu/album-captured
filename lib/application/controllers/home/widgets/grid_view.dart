@@ -13,9 +13,8 @@ class AlbumList extends StatelessWidget {
     return SliverToBoxAdapter(
       child: GridView.count(
         crossAxisCount: 2,
-        mainAxisSpacing: 12.0,
         crossAxisSpacing: 12.0,
-        childAspectRatio: 1 / 1.5,
+        childAspectRatio: 1 / 1.6,
         padding: const EdgeInsets.all(16.0),
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),

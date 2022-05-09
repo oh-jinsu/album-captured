@@ -74,6 +74,8 @@ class AlbumTile extends StatelessWidget {
             children: [
               Text(
                 viewModel.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontSize: 16.0,
                 ),
