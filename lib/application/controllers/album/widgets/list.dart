@@ -26,20 +26,22 @@ class _AlbumListWidgetState extends State<AlbumListWidget> {
     super.initState();
   }
 
+  @override
+  void didUpdateWidget(covariant AlbumListWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    final updatedList = widget.items.where(
+        (newone) => oldWidget.items.every((oldone) => oldone.id != newone.id));
+
+    setState(() {
+      _items.addAll(updatedList);
+    });
+  }
+
   void initialize() async {
     await Future.delayed(const Duration(milliseconds: 16));
 
-    await Future.wait(widget.items.map(
-      (item) async {
-        final uri = item.publicImageUri;
-
-        await precacheImage(NetworkImage(uri), context);
-
-        return uri;
-      },
-    ));
-
-    _items.addAll(widget.items);
+    _items.addAll(widget.items.reversed);
 
     setState(() {
       _isLoaded = true;

@@ -28,7 +28,7 @@ class _AlbumFloorWidgetState extends State<AlbumFloorWidget>
     with TickerProviderStateMixin {
   static const seed = 3;
 
-  static const _biasDepthsY = 4;
+  static const _biasDepthsY = 2;
   static const _biasDepthsZ = 1;
 
   static const _biasPositionX = 15.0;
@@ -60,9 +60,10 @@ class _AlbumFloorWidgetState extends State<AlbumFloorWidget>
 
   late Animation<double> _animatedPositionX;
 
-  double get _positionY => (-widget.index.toDouble() * 0.1 * _biasDepthsY +
+  double get _positionY =>
+      -widget.index.toDouble() * 0.1 * _biasDepthsY +
       _biasPositionY * middleRandom +
-      _insetY);
+      _insetY;
 
   late Animation<double> _animatedPositionY;
 
@@ -73,32 +74,25 @@ class _AlbumFloorWidgetState extends State<AlbumFloorWidget>
   late final AnimationController _popAnimationController = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 1000),
-  )..addListener(() {
-      setState(() {});
-    });
+  )..addListener(update);
 
   late final AnimationController _pickAnimationController = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 300),
-  )..addListener(() {
-      setState(() {});
-    });
-
+  )..addListener(update);
   late final AnimationController _leaveAnimationController =
       AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 300),
-  )..addListener(() {
-          setState(() {});
-        });
+  )..addListener(update);
 
   late final AnimationController _slideAnimationController =
       AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 1000),
-  )..addListener(() {
-          setState(() {});
-        });
+  )..addListener(update);
+
+  void update() => setState(() {});
 
   void onDragStart(DragStartDetails details) {
     if (_isSliding) {
@@ -122,7 +116,7 @@ class _AlbumFloorWidgetState extends State<AlbumFloorWidget>
         Tween(begin: _animatedDepthsZ.value, end: 0.0).animate(curve);
 
     _animatedPositionY =
-        Tween(begin: _animatedPositionY.value, end: 0.0).animate(curve);
+        Tween(begin: _animatedPositionY.value, end: 1 * _insetY).animate(curve);
 
     _animatedPositionZ =
         Tween(begin: _animatedPositionZ.value, end: 0.0).animate(curve);
@@ -271,9 +265,7 @@ class _AlbumFloorWidgetState extends State<AlbumFloorWidget>
   }
 
   Widget content(BuildContext context) {
-    final width = MediaQuery.of(context).size.width - 32.0;
-
-    final height = width * 1.3;
+    final width = MediaQuery.of(context).size.width - 16.0;
 
     return Center(
       child: Transform(
@@ -295,7 +287,6 @@ class _AlbumFloorWidgetState extends State<AlbumFloorWidget>
             onPanEnd: onDragEnd,
             child: Container(
               width: width,
-              height: height,
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(color: Colors.white, boxShadow: [
                 BoxShadow(
@@ -307,6 +298,7 @@ class _AlbumFloorWidgetState extends State<AlbumFloorWidget>
               ]),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   AspectRatio(
                     aspectRatio: 1.0,
@@ -319,14 +311,15 @@ class _AlbumFloorWidgetState extends State<AlbumFloorWidget>
                   Text(
                     "${widget.date.year}.${widget.date.month}.${widget.date.day}",
                     textAlign: TextAlign.right,
+                    style: const TextStyle(fontSize: 16.0, height: 1.0),
                   ),
                   const SizedBox(height: 16.0),
-                  if (widget.description != null)
-                    Text(
-                      widget.description!,
-                      textAlign: TextAlign.right,
-                      maxLines: 2,
-                    ),
+                  Text(
+                    widget.description ?? "",
+                    textAlign: TextAlign.right,
+                    maxLines: 2,
+                    style: const TextStyle(fontSize: 16.0, height: 1.0),
+                  )
                 ],
               ),
             ),

@@ -33,8 +33,15 @@ class Album extends Controller<AlbumArguments> {
   @override
   Widget render(BuildContext context) {
     return CupertinoPageScaffold(
-      child: Column(
+      child: Stack(
         children: [
+          PhotoListStore().subscribe(
+            onNext: (data) => Padding(
+              padding: const EdgeInsets.only(top: 48.0),
+              child: AlbumListWidget(items: data.items),
+            ),
+            onLoad: () => Container(),
+          ),
           CupertinoNavigationBar(
             middle: Text(
               arguments.title,
@@ -42,44 +49,48 @@ class Album extends Controller<AlbumArguments> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          Expanded(
-            child: PhotoListStore().subscribe(
-              onNext: (data) => AlbumListWidget(items: data.items),
-              onLoad: () => Container(),
-            ),
-          ),
-          SafeArea(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                AppButton(
-                  child: const Icon(
-                    CupertinoIcons.person_2,
-                  ),
-                  onPressed: () => {},
-                ),
-                AppButton(
-                  child: const Icon(
-                    CupertinoIcons.plus_square,
-                  ),
-                  onPressed: () =>
-                      CupertinoScaffold.showCupertinoModalBottomSheet(
-                    expand: true,
-                    context: context,
-                    builder: (context) => Editor(
-                      EditorArguments(
-                        albumId: arguments.id,
+          Positioned(
+            bottom: 0.0,
+            left: 0.0,
+            right: 0.0,
+            child: Container(
+              padding: const EdgeInsets.only(top: 16.0),
+              color: CupertinoColors.systemBackground,
+              child: SafeArea(
+                top: false,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    AppButton(
+                      child: const Icon(
+                        CupertinoIcons.person_2,
+                      ),
+                      onPressed: () => {},
+                    ),
+                    AppButton(
+                      child: const Icon(
+                        CupertinoIcons.plus_square,
+                      ),
+                      onPressed: () =>
+                          CupertinoScaffold.showCupertinoModalBottomSheet(
+                        expand: true,
+                        context: context,
+                        builder: (context) => Editor(
+                          EditorArguments(
+                            albumId: arguments.id,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    AppButton(
+                      child: const Icon(
+                        CupertinoIcons.ellipsis_circle,
+                      ),
+                      onPressed: () => {},
+                    ),
+                  ],
                 ),
-                AppButton(
-                  child: const Icon(
-                    CupertinoIcons.ellipsis_circle,
-                  ),
-                  onPressed: () => {},
-                ),
-              ],
+              ),
             ),
           )
         ],

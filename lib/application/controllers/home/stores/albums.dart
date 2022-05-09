@@ -1,5 +1,6 @@
 import 'package:album/application/controllers/home/controller.dart';
 import 'package:album/application/controllers/home/events/album_added.dart';
+import 'package:album/application/controllers/home/events/album_updated.dart';
 import 'package:album/application/controllers/home/events/albums_found.dart';
 import 'package:album/application/controllers/home/models/album.dart';
 import 'package:album/application/controllers/home/models/album_user.dart';
@@ -52,7 +53,8 @@ class AlbumListStore extends Store<List<AlbumViewModel>> {
   @override
   onListen() => of<Home>()
     ..on<AlbumsFound>(_onAlbumsFound)
-    ..on<AlbumAdded>(_onAlbumAdded);
+    ..on<AlbumAdded>(_onAlbumAdded)
+    ..on<LatestPhotoAdded>(_onAlbumUpdated);
 
   List<AlbumViewModel> _onAlbumsFound(AlbumsFound event) {
     return event.body.items.map(AlbumViewModel.fromModel).toList();
@@ -66,5 +68,21 @@ class AlbumListStore extends Store<List<AlbumViewModel>> {
     }
 
     return [newone];
+  }
+
+  List<AlbumViewModel> _onAlbumUpdated(LatestPhotoAdded event) {
+    return value.map((e) {
+      if (e.id != event.albumId) {
+        return e;
+      }
+
+      return AlbumViewModel(
+        id: e.id,
+        coverImageUri: event.coverImageUri,
+        title: e.title,
+        users: e.users,
+        photoCount: e.photoCount + 1,
+      );
+    }).toList();
   }
 }

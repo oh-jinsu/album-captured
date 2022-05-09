@@ -1,4 +1,5 @@
 import 'package:album/application/controllers/album/controller.dart';
+import 'package:album/application/controllers/album/events/photo_added.dart';
 import 'package:album/application/controllers/album/events/photo_list_found.dart';
 import 'package:album/application/controllers/album/models/photo.dart';
 import 'package:album/core/store/store.dart';
@@ -40,7 +41,9 @@ class ListOfPhotoViewmodel {
 class PhotoListStore extends Store<ListOfPhotoViewmodel> {
   @override
   void onListen() {
-    of<Album>().on<PhotoListFound>(_onPhotoListFound);
+    of<Album>()
+      ..on<PhotoListFound>(_onPhotoListFound)
+      ..on<PhotoAdded>(_onPhotoAdded);
   }
 
   ListOfPhotoViewmodel _onPhotoListFound(PhotoListFound event) {
@@ -55,5 +58,18 @@ class PhotoListStore extends Store<ListOfPhotoViewmodel> {
       next: event.body.next,
       items: event.body.items.map(PhotoViewModel.fromModel).toList(),
     );
+  }
+
+  ListOfPhotoViewmodel _onPhotoAdded(PhotoAdded event) {
+    if (hasValue) {
+      return ListOfPhotoViewmodel(next: value.next, items: [
+        PhotoViewModel.fromModel(event.body),
+        ...value.items,
+      ]);
+    }
+
+    return ListOfPhotoViewmodel(next: null, items: [
+      PhotoViewModel.fromModel(event.body),
+    ]);
   }
 }
