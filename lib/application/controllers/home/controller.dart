@@ -15,6 +15,9 @@ class Home extends Controller {
       : super(
           const Arguments(),
           key: key,
+          stores: [
+            AlbumListStore(),
+          ],
           usecases: [
             FindAlbumsUseCase(),
           ],
@@ -23,7 +26,7 @@ class Home extends Controller {
   @override
   Widget render(BuildContext context) {
     return CupertinoPageScaffold(
-      child: AlbumListStore().subscribe(
+      child: get<AlbumListStore>().subscribe(
         onNext: (data) => CustomScrollView(
           slivers: [
             CupertinoSliverNavigationBar(

@@ -6,6 +6,7 @@ import 'package:album/core/event/event.dart';
 import 'package:album/core/usecase/usecase.dart';
 import 'package:album/infrastructure/client/client.dart';
 import 'package:album/infrastructure/client/response.dart';
+import 'package:album/infrastructure/providers/precache.dart';
 import 'package:album/infrastructure/repositories/auth.dart';
 
 class FindAlbumsUseCase extends UseCase {
@@ -24,9 +25,24 @@ class FindAlbumsUseCase extends UseCase {
 
       final next = response.body["next"];
 
-      final items = (response.body["items"] as List)
-          .map((e) => AlbumModel.fromJson(e))
-          .toList();
+      final items =
+          await Future.wait((response.body["items"] as List).map((item) async {
+        final coverImageUri = item["cover_image_uri"] as String?;
+
+        if (coverImageUri != null) {
+          await use<PrecacheProvider>().fromNetwork(coverImageUri);
+        }
+
+        await Future.wait((item["users"] as List).map((user) async {
+          final avatarImageUri = user["avatar_image_uri"];
+
+          if (avatarImageUri != null) {
+            await use<PrecacheProvider>().fromNetwork(avatarImageUri);
+          }
+        }));
+
+        return AlbumModel.fromJson(item);
+      }).toList());
 
       final body = ListOfAlbumsModel(next: next, items: items);
 

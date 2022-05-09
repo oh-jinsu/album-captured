@@ -17,6 +17,11 @@ class DialogToAddAlbum extends Controller {
       : super(
           const Arguments(),
           key: key,
+          stores: [
+            MessageStore(),
+            SubmitButtonStateStore(),
+            TextFieldStateStore(),
+          ],
           usecases: [
             SubmitAlbumUseCase(),
           ],
@@ -46,7 +51,7 @@ class DialogToAddAlbum extends Controller {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextFieldStateStore().subscribe(
+            get<TextFieldStateStore>().subscribe(
               onNext: (data) => CupertinoTextField(
                 enabled: data == TextFieldState.enabled,
                 controller: textEditingController,
@@ -58,7 +63,7 @@ class DialogToAddAlbum extends Controller {
                 ),
               ),
             ),
-            MessageStore().subscribe(
+            get<MessageStore>().subscribe(
               onNext: (data) {
                 if (data == null) {
                   return const SizedBox(height: 4.0);
@@ -88,7 +93,7 @@ class DialogToAddAlbum extends Controller {
             ),
           ),
         ),
-        SubmitButtonStateStore().subscribe(
+        get<SubmitButtonStateStore>().subscribe(
           onNext: (data) {
             switch (data) {
               case ButtonState.enabled:

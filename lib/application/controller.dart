@@ -6,6 +6,7 @@ import 'package:album/core/controller/arguments.dart';
 import 'package:album/core/controller/controller.dart';
 import 'package:album/core/locator/singleton.dart';
 import 'package:album/infrastructure/client/client.dart';
+import 'package:album/infrastructure/providers/precache.dart';
 import 'package:album/infrastructure/repositories/auth.dart';
 import 'package:album/infrastructure/repositories/image.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,6 +23,7 @@ class App extends Controller {
             Singleton<Client>(Client()),
             Singleton<AuthRepository>(AuthRepository()),
             Singleton<ImageRepository>(ImageRepository()),
+            Singleton<PrecacheProvider>(PrecacheProvider()),
           ],
           usecases: [
             BootstrapUseCase(),

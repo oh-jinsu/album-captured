@@ -25,6 +25,9 @@ class Album extends Controller<AlbumArguments> {
   }) : super(
           arguments,
           key: key,
+          stores: [
+            PhotoListStore(),
+          ],
           usecases: [
             FindPhotoListUseCase(),
           ],
@@ -35,7 +38,7 @@ class Album extends Controller<AlbumArguments> {
     return CupertinoPageScaffold(
       child: Stack(
         children: [
-          PhotoListStore().subscribe(
+          get<PhotoListStore>().subscribe(
             onNext: (data) => Padding(
               padding: const EdgeInsets.only(top: 48.0),
               child: AlbumListWidget(items: data.items),

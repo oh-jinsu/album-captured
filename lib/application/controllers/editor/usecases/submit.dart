@@ -10,6 +10,7 @@ import 'package:album/core/event/event.dart';
 import 'package:album/core/usecase/usecase.dart';
 import 'package:album/infrastructure/client/client.dart';
 import 'package:album/infrastructure/client/response.dart';
+import 'package:album/infrastructure/providers/precache.dart';
 import 'package:album/infrastructure/repositories/auth.dart';
 
 class SubmitUseCase extends UseCase {
@@ -43,6 +44,10 @@ class SubmitUseCase extends UseCase {
       if (response is! SuccessResponse) {
         return;
       }
+
+      await use<PrecacheProvider>().fromNetwork(
+        response.body["public_image_uri"],
+      );
 
       of<Album>().dispatch(
         PhotoAdded(body: PhotoModel.fromJson(response.body)),

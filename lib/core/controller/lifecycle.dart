@@ -1,5 +1,11 @@
+import 'dart:collection';
+
 import 'package:album/core/utilities/debug.dart';
 import 'package:flutter/widgets.dart';
+
+final _contextQueue = Queue<BuildContext>();
+
+BuildContext requireContext() => _contextQueue.last;
 
 class _Lifecycle extends StatefulWidget {
   final BuildContext inheritedContext;
@@ -30,12 +36,16 @@ class _ControllerState extends State<_Lifecycle> {
   void initState() {
     widget.onCreate(context);
 
+    _contextQueue.addLast(context);
+
     super.initState();
   }
 
   @override
   void dispose() {
     widget.onDestroy(context);
+
+    _contextQueue.remove(context);
 
     super.dispose();
   }
