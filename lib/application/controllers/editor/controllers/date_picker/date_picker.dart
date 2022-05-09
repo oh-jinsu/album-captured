@@ -49,7 +49,7 @@ class PhotoEditorDatePicker extends Controller {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text("${date.year}년 ${date.month}월 ${date.day}일"),
+          Text("${date.year}.${date.month}.${date.day}"),
           const SizedBox(width: 6.0),
           Icon(
             CupertinoIcons.calendar,

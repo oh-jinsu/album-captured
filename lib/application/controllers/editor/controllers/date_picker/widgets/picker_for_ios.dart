@@ -27,6 +27,8 @@ class _PickerForIosState extends State<PickerForIos> {
           height: 200.0,
           child: CupertinoDatePicker(
             mode: CupertinoDatePickerMode.date,
+            initialDateTime: DateTime.now(),
+            maximumDate: DateTime.now(),
             onDateTimeChanged: (date) {
               temporary = date;
             },
