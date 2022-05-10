@@ -1,6 +1,9 @@
+import 'package:album/application/controller.dart';
 import 'package:album/application/controllers/signin/controller.dart';
 import 'package:album/application/controllers/signin/events/apple_sign_in_requested.dart';
 import 'package:album/application/controllers/signup/controller.dart';
+import 'package:album/application/events/user_found.dart';
+import 'package:album/application/models/user.dart';
 import 'package:album/core/event/event.dart';
 import 'package:album/core/usecase/usecase.dart';
 import 'package:album/infrastructure/client/client.dart';
@@ -55,8 +58,24 @@ class SignInWithAppleUseCase extends UseCase {
 
       await use<AuthRepository>().saveRefreshToken(refreshToken);
 
+      await _fetchUser(accessToken);
+
       of<SignIn>().dispatch(const Popped());
     });
+  }
+
+  Future<void> _fetchUser(String accessToken) async {
+    final response = await use<Client>().get("user/me", headers: {
+      "Authorization": "Bearer $accessToken",
+    });
+
+    if (response is! SuccessResponse) {
+      return;
+    }
+
+    final user = UserModel.fromJson(response.body);
+
+    of<App>().dispatch(UserFound(body: user));
   }
 
   Future<AuthorizationCredentialAppleID?> _getAccount() async {

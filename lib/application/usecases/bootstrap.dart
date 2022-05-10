@@ -135,28 +135,11 @@ class BootstrapUseCase extends UseCase {
 
     await use<AuthRepository>().saveRefreshToken(refreshToken);
 
-    final normal = base64Url.normalize(accessToken.split(".")[1]);
-
-    final payload = jsonDecode(utf8.decode(base64Url.decode(normal)));
-
-    if (payload["grd"] == "member") {
-      final userResponse = await use<Client>().post(
-        "user/guest",
-        headers: {
-          "Authorization": "Bearer $accessToken",
-        },
-      );
-
-      if (userResponse is! SuccessResponse) {
-        return;
-      }
-
-      await use<PrecacheProvider>()
-          .fromNetwork(response.body["avatar_image_uri"]);
-
-      final user = UserModel.fromJson(response.body);
-
-      of<App>().dispatch(UserFound(body: user));
-    }
+    await use<Client>().post(
+      "user/guest",
+      headers: {
+        "Authorization": "Bearer $accessToken",
+      },
+    );
   }
 }

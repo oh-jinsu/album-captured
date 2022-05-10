@@ -94,13 +94,17 @@ class Client {
   Response _parseResponse(http.Response response) {
     Debug.log(response.statusCode);
 
-    final body = jsonDecode(response.body);
+    Debug.log(response.body);
 
-    Debug.log(body);
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      return SuccessResponse(body: body);
+    if (response.statusCode == 204) {
+      return const SuccessResponse(body: null);
     }
+
+    if (response.statusCode.toString().startsWith("2")) {
+      return SuccessResponse(body: jsonDecode(response.body));
+    }
+
+    final body = jsonDecode(response.body);
 
     final code = body["code"];
 
