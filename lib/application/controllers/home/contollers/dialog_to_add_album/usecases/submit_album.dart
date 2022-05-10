@@ -1,10 +1,10 @@
+import 'package:album/application/controller.dart';
 import 'package:album/application/controllers/home/contollers/dialog_to_add_album/controller.dart';
 import 'package:album/application/controllers/home/contollers/dialog_to_add_album/events/pending.dart';
 import 'package:album/application/controllers/home/contollers/dialog_to_add_album/events/submitted.dart';
 import 'package:album/application/controllers/home/contollers/dialog_to_add_album/events/sumbit_failed.dart';
-import 'package:album/application/controllers/home/controller.dart';
-import 'package:album/application/controllers/home/events/album_added.dart';
-import 'package:album/application/controllers/home/models/album.dart';
+import 'package:album/application/events/album_added.dart';
+import 'package:album/application/models/album.dart';
 import 'package:album/core/event/event.dart';
 import 'package:album/core/usecase/usecase.dart';
 import 'package:album/infrastructure/client/client.dart';
@@ -39,9 +39,7 @@ class SubmitAlbumUseCase extends UseCase {
         if (response is SuccessResponse) {
           final body = response.body;
 
-          final event = AlbumAdded(body: AlbumModel.fromJson(body));
-
-          of<Home>().dispatch(event);
+          of<App>().dispatch(AlbumAdded(body: AlbumModel.fromJson(body)));
 
           of<DialogToAddAlbum>().dispatch(const Popped());
         }

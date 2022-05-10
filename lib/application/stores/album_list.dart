@@ -1,9 +1,9 @@
-import 'package:album/application/controllers/home/controller.dart';
-import 'package:album/application/controllers/home/events/album_added.dart';
-import 'package:album/application/controllers/home/events/album_updated.dart';
-import 'package:album/application/controllers/home/events/albums_found.dart';
-import 'package:album/application/controllers/home/models/album.dart';
-import 'package:album/application/controllers/home/models/album_user.dart';
+import 'package:album/application/controller.dart';
+import 'package:album/application/events/album_added.dart';
+import 'package:album/application/events/album_updated.dart';
+import 'package:album/application/events/albums_found.dart';
+import 'package:album/application/models/album.dart';
+import 'package:album/application/models/album_user.dart';
 import 'package:album/core/store/store.dart';
 
 class AlbumUserViewModel {
@@ -51,7 +51,7 @@ class AlbumViewModel {
 
 class AlbumListStore extends Store<List<AlbumViewModel>> {
   @override
-  onListen() => of<Home>()
+  onListen() => of<App>()
     ..on<AlbumsFound>(_onAlbumsFound)
     ..on<AlbumAdded>(_onAlbumAdded)
     ..on<LatestPhotoAdded>(_onAlbumUpdated);

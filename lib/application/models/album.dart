@@ -1,4 +1,4 @@
-import 'package:album/application/controllers/home/models/album_user.dart';
+import 'package:album/application/models/album_user.dart';
 
 class AlbumModel {
   final String id;

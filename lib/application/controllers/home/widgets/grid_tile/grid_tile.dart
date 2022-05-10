@@ -1,4 +1,4 @@
-import 'package:album/application/controllers/home/stores/albums.dart';
+import 'package:album/application/stores/album_list.dart';
 import 'package:album/application/controllers/home/widgets/grid_tile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

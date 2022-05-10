@@ -23,7 +23,7 @@ class SignIn extends Controller {
   @override
   Widget render(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
+      navigationBar: const CupertinoNavigationBar(
         backgroundColor: CupertinoColors.systemBackground,
         border: Border(),
         transitionBetweenRoutes: false,

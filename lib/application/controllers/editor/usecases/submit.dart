@@ -1,11 +1,11 @@
+import 'package:album/application/controller.dart';
 import 'package:album/application/controllers/album/controller.dart';
 import 'package:album/application/controllers/album/events/photo_added.dart';
 import 'package:album/application/controllers/album/models/photo.dart';
 import 'package:album/application/controllers/editor/controller.dart';
 import 'package:album/application/controllers/editor/events/pending.dart';
 import 'package:album/application/controllers/editor/events/submitted.dart';
-import 'package:album/application/controllers/home/controller.dart';
-import 'package:album/application/controllers/home/events/album_updated.dart';
+import 'package:album/application/events/album_updated.dart';
 import 'package:album/core/event/event.dart';
 import 'package:album/core/usecase/usecase.dart';
 import 'package:album/infrastructure/client/client.dart';
@@ -53,7 +53,7 @@ class SubmitUseCase extends UseCase {
         PhotoAdded(body: PhotoModel.fromJson(response.body)),
       );
 
-      of<Home>().dispatch(LatestPhotoAdded(
+      of<App>().dispatch(LatestPhotoAdded(
         albumId: event.albumId,
         coverImageUri: response.body["public_image_uri"],
       ));

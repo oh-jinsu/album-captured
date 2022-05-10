@@ -4,6 +4,7 @@ import 'package:album/application/controllers/profile/controller.dart';
 import 'package:album/application/controllers/signin/controller.dart';
 import 'package:album/application/controllers/signup/controller.dart';
 import 'package:album/application/controllers/splash/controller.dart';
+import 'package:album/application/stores/album_list.dart';
 import 'package:album/application/stores/user.dart';
 import 'package:album/application/usecases/bootstrap.dart';
 import 'package:album/core/controller/arguments.dart';
@@ -24,6 +25,7 @@ class App extends Controller {
           const Arguments(),
           key: key,
           stores: [
+            AlbumListStore(),
             UserStore(),
           ],
           services: [

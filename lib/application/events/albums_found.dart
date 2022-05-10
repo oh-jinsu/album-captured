@@ -1,4 +1,4 @@
-import 'package:album/application/controllers/home/models/list_of_albums.dart';
+import 'package:album/application/models/list_of_albums.dart';
 import 'package:album/core/event/event.dart';
 
 class AlbumsFound extends OutputEvent<ListOfAlbumsModel> {
