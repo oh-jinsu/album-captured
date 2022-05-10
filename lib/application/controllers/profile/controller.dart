@@ -1,9 +1,7 @@
 import 'package:album/application/controller.dart';
-import 'package:album/application/controllers/profile/widgets/login_button.dart';
+import 'package:album/application/controllers/profile/widgets/avatar.dart';
 import 'package:album/application/controllers/profile/widgets/menu.dart';
 import 'package:album/application/stores/user.dart';
-import 'package:album/application/widgets/button.dart';
-import 'package:album/application/widgets/menu_container.dart';
 import 'package:album/core/controller/arguments.dart';
 import 'package:album/core/controller/controller.dart';
 import 'package:album/core/event/event.dart';
@@ -23,27 +21,76 @@ class Profile extends Controller {
       child: Column(
         children: [
           Expanded(
-            child: SafeArea(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: SingleChildScrollView(
+              child: SafeArea(
                 child: Column(
                   children: [
+                    const SizedBox(
+                      height: 16.0,
+                    ),
                     of<App>().require<UserStore>().subscribe(
-                          onNext: (data) => Container(),
+                          onNext: (data) => Column(
+                            children: [
+                              const SizedBox(height: 24.0),
+                              ProfileAvatar(
+                                imageUri: data.avatar,
+                              ),
+                              const SizedBox(height: 12.0),
+                              Text(
+                                data.name,
+                                style: const TextStyle(
+                                  fontSize: 20.0,
+                                ),
+                              ),
+                              if (data.email != null) ...[
+                                const SizedBox(height: 4.0),
+                                Text(
+                                  data.email!,
+                                  style: const TextStyle(
+                                    color: CupertinoColors.inactiveGray,
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                              ],
+                              CupertinoFormSection(
+                                header: const Text("계정"),
+                                children: [
+                                  ProfileMenu(
+                                    onTap: () {},
+                                    prefix: const Text("이름, 이메일, 프로필 사진"),
+                                    child: const Icon(
+                                      CupertinoIcons.chevron_forward,
+                                      size: 20.0,
+                                      color: CupertinoColors.systemGrey3,
+                                    ),
+                                  ),
+                                  ProfileMenu(
+                                    onTap: () => to<Profile>()
+                                        .dispatch(const Pushed("/signin")),
+                                    prefix: const Text(
+                                      "구매 내역",
+                                    ),
+                                    child: const Icon(
+                                      CupertinoIcons.chevron_forward,
+                                      size: 20.0,
+                                      color: CupertinoColors.systemGrey3,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                           onLoad: () => CupertinoFormSection(
                             header: const Text("계정"),
                             children: [
                               ProfileMenu(
-                                onTap: () {},
+                                onTap: () => to<Profile>()
+                                    .dispatch(const Pushed("/signin")),
                                 prefix: const Text(
                                   "로그인",
                                   style: TextStyle(
                                       color: CupertinoColors.activeBlue),
-                                ),
-                                child: const Icon(
-                                  CupertinoIcons.chevron_forward,
-                                  size: 20.0,
-                                  color: CupertinoColors.systemGrey3,
                                 ),
                               ),
                             ],
@@ -82,19 +129,15 @@ class Profile extends Controller {
                       ],
                     ),
                     CupertinoFormSection(
-                      header: const Text("애플리케이션"),
+                      header: const Text("기타"),
                       children: [
                         ProfileMenu(
                           onTap: () {},
-                          prefix: const Text("버전 0.1.0"),
-                        ),
-                        ProfileMenu(
-                          onTap: () {},
-                          prefix: const Text("codersproduct"),
-                          child: const Icon(
-                            CupertinoIcons.chevron_forward,
-                            size: 20.0,
-                            color: CupertinoColors.systemGrey3,
+                          prefix: const Text(
+                            "로그아웃",
+                            style: TextStyle(
+                              color: CupertinoColors.destructiveRed,
+                            ),
                           ),
                         ),
                       ],

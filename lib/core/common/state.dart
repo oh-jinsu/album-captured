@@ -8,3 +8,9 @@ enum TextFieldState {
   enabled,
   disabled,
 }
+
+enum SubmitFormState {
+  enabled,
+  disabled,
+  pending,
+}

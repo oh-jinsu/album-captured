@@ -9,7 +9,6 @@ import 'package:album/core/controller/arguments.dart';
 import 'package:album/core/controller/controller.dart';
 import 'package:album/core/event/event.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 class Home extends Controller {
   Home({Key? key})

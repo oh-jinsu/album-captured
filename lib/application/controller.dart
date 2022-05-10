@@ -1,6 +1,8 @@
 import 'package:album/application/controllers/album/controller.dart';
 import 'package:album/application/controllers/home/controller.dart';
 import 'package:album/application/controllers/profile/controller.dart';
+import 'package:album/application/controllers/signin/controller.dart';
+import 'package:album/application/controllers/signup/controller.dart';
 import 'package:album/application/controllers/splash/controller.dart';
 import 'package:album/application/stores/user.dart';
 import 'package:album/application/usecases/bootstrap.dart';
@@ -79,6 +81,20 @@ class App extends Controller {
 
           return MaterialPageRoute(
             builder: (context) => CupertinoScaffold(body: Album(arguments)),
+          );
+        }
+
+        if (name == "/signin") {
+          return MaterialPageRoute(
+            builder: (context) => CupertinoScaffold(body: SignIn()),
+          );
+        }
+
+        if (name == "/signup") {
+          final arguments = settings.arguments as SignUpArguments;
+
+          return MaterialPageRoute(
+            builder: (context) => CupertinoScaffold(body: SignUp(arguments)),
           );
         }
 

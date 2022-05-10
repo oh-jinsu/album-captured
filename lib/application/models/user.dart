@@ -20,7 +20,7 @@ class UserModel {
       id: json["id"],
       name: json["name"],
       email: json["email"],
-      avatar: json["avatar"],
+      avatar: json["avatar_image_uri"],
       updatedAt: DateTime.parse(json["updated_at"]),
       createdAt: DateTime.parse(json["created_at"]),
     );
