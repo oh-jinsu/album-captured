@@ -1,10 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:album/application/controller.dart';
 import 'package:album/application/controllers/splash/controller.dart';
 import 'package:album/application/events/albums_found.dart';
 import 'package:album/application/events/user_found.dart';
-import 'package:album/application/models/album.dart';
 import 'package:album/application/models/list_of_albums.dart';
 import 'package:album/application/models/user.dart';
 import 'package:album/core/event/event.dart';
@@ -20,40 +20,34 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class BootstrapUseCase extends UseCase {
   @override
   void onAwaken() {
-    of<App>().on<Created>((event) async {
-      await dotenv.load();
-
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
-
-      await _autoSignIn();
-
-      await _fetchAlbums();
-
-      of<Splash>().dispatch(const Pushed("/home"));
-    });
+    of<App>().on<Created>(
+      (_) => dotenv
+          .load()
+          .then(_initializeFirebase)
+          .then(_autoSignIn)
+          .then(_fetchAlbums)
+          .then(_navigateToHome),
+    );
   }
 
-  Future<void> _autoSignIn() async {
+  Future<void> _initializeFirebase(void _) async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
+
+  Future<void> _autoSignIn(void _) async {
     final refreshToken = await use<AuthRepository>().findRefreshToken();
 
     if (refreshToken == null) {
-      await _signUpWithGuest();
+      return await _signUpWithGuest();
     } else {
-      final response = await use<Client>().post(
-        "auth/refresh",
-        body: {
-          "refresh_token": refreshToken,
-        },
-      );
-
-      if (response is FailureResponse) {
-        await _signUpWithGuest();
-      }
+      final response = await use<Client>().post("auth/refresh", body: {
+        "refresh_token": refreshToken,
+      });
 
       if (response is! SuccessResponse) {
-        return;
+        return _signUpWithGuest();
       }
 
       final accessToken = response.body["access_token"];
@@ -83,43 +77,6 @@ class BootstrapUseCase extends UseCase {
     }
   }
 
-  Future<void> _fetchAlbums() async {
-    final accessToken = await use<AuthRepository>().findAccessToken();
-
-    final response = await use<Client>().get("album", headers: {
-      "Authorization": "Bearer $accessToken",
-    });
-
-    if (response is! SuccessResponse) {
-      return;
-    }
-
-    final next = response.body["next"];
-
-    final items =
-        await Future.wait((response.body["items"] as List).map((item) async {
-      final coverImageUri = item["cover_image_uri"] as String?;
-
-      if (coverImageUri != null) {
-        await use<PrecacheProvider>().fromNetwork(coverImageUri);
-      }
-
-      await Future.wait((item["users"] as List).map((user) async {
-        final avatarImageUri = user["avatar_image_uri"];
-
-        if (avatarImageUri != null) {
-          await use<PrecacheProvider>().fromNetwork(avatarImageUri);
-        }
-      }));
-
-      return AlbumModel.fromJson(item);
-    }).toList());
-
-    final body = ListOfAlbumsModel(next: next, items: items);
-
-    of<App>().dispatch(AlbumsFound(body: body));
-  }
-
   Future<void> _signUpWithGuest() async {
     final response = await use<Client>().get("auth/guest");
 
@@ -141,5 +98,25 @@ class BootstrapUseCase extends UseCase {
         "Authorization": "Bearer $accessToken",
       },
     );
+  }
+
+  Future<void> _fetchAlbums(void _) async {
+    final accessToken = await use<AuthRepository>().findAccessToken();
+
+    final response = await use<Client>().get("album", headers: {
+      "Authorization": "Bearer $accessToken",
+    });
+
+    if (response is! SuccessResponse) {
+      return;
+    }
+
+    final body = ListOfAlbumsModel.fromJson(response.body);
+
+    of<App>().dispatch(AlbumsFound(body: body));
+  }
+
+  Future<void> _navigateToHome(void _) async {
+    of<Splash>().dispatch(const Pushed("/home"));
   }
 }

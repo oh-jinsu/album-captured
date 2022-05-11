@@ -28,14 +28,14 @@ class App extends Controller {
             AlbumListStore(),
             UserStore(),
           ],
+          usecases: [
+            BootstrapUseCase(),
+          ],
           services: [
             Singleton<Client>(Client()),
             Singleton<AuthRepository>(AuthRepository()),
             Singleton<ImageRepository>(ImageRepository()),
             Singleton<PrecacheProvider>(PrecacheProvider()),
-          ],
-          usecases: [
-            BootstrapUseCase(),
           ],
         );
 

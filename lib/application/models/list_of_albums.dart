@@ -8,4 +8,12 @@ class ListOfAlbumsModel {
     required this.next,
     required this.items,
   });
+
+  factory ListOfAlbumsModel.fromJson(Map<String, dynamic> json) {
+    return ListOfAlbumsModel(
+      next: json["next"],
+      items:
+          (json["items"] as List).map((e) => AlbumModel.fromJson(e)).toList(),
+    );
+  }
 }
