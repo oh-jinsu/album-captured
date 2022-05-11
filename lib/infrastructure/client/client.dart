@@ -79,6 +79,8 @@ class Client {
     required Map<String, String> headers,
   }) async {
     try {
+      Debug.log(headers);
+
       final response = await fetcher(_getUri(endpoint), headers: headers);
 
       return _parseResponse(response);
