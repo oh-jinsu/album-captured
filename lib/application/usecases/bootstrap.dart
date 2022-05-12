@@ -67,9 +67,6 @@ class BootstrapUseCase extends UseCase {
           return;
         }
 
-        await use<PrecacheProvider>()
-            .fromNetwork(userResponse.body["avatar_image_uri"]);
-
         final user = UserModel.fromJson(userResponse.body);
 
         of<App>().dispatch(UserFound(body: user));

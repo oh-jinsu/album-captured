@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/foundation.dart';
 
 class Debug {
@@ -13,7 +15,7 @@ class Debug {
 
       final millisecond = now.millisecond.toString().padLeft(3, "0");
 
-      print("[$hour:$minute:$second:$millisecond] $object");
+      developer.log("[$hour:$minute:$second:$millisecond] $object");
     }
   }
 }
