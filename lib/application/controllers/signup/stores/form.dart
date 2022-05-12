@@ -35,11 +35,11 @@ class SignUpFormStore extends Store<SignUpFormModel> {
       ..on<Pending>(_onPending);
   }
 
-  SignUpFormModel _onAvatarPicked(AvatarPicked event) {
+  Future<SignUpFormModel> _onAvatarPicked(AvatarPicked event) async {
     return value.copy(avatar: Arg(event.file));
   }
 
-  SignUpFormModel _onNameChanged(NameChanged event) {
+  Future<SignUpFormModel> _onNameChanged(NameChanged event) async {
     if (event.value.isEmpty) {
       return value.copy(
         name: Arg(event.value),
@@ -67,11 +67,12 @@ class SignUpFormStore extends Store<SignUpFormModel> {
     return value.copy(name: Arg(event.value), nameMessage: const Arg(null));
   }
 
-  SignUpFormModel _onEmailChanged(EmailChanged event) {
+  Future<SignUpFormModel> _onEmailChanged(EmailChanged event) async {
     return value.copy(email: Arg(event.value), emailMessage: null);
   }
 
-  SignUpFormModel _onServiceAgreementChanged(ServiceAgreementChanged event) {
+  Future<SignUpFormModel> _onServiceAgreementChanged(
+      ServiceAgreementChanged event) async {
     if (event.value &&
         value.name.isNotEmpty &&
         value.name.length <= 12 &&
@@ -92,7 +93,8 @@ class SignUpFormStore extends Store<SignUpFormModel> {
     return value.copy(isServiceAgreed: Arg(event.value));
   }
 
-  SignUpFormModel _onPrivacyAgreementChanged(PrivacyAgreementChanged event) {
+  Future<SignUpFormModel> _onPrivacyAgreementChanged(
+      PrivacyAgreementChanged event) async {
     if (event.value &&
         value.name.isNotEmpty &&
         value.name.length <= 12 &&
@@ -113,7 +115,7 @@ class SignUpFormStore extends Store<SignUpFormModel> {
     return value.copy(isPrivacyAgreed: Arg(event.value));
   }
 
-  SignUpFormModel _onPending(Pending event) {
+  Future<SignUpFormModel> _onPending(Pending event) async {
     return value.copy(state: const Arg(SubmitFormState.pending));
   }
 }

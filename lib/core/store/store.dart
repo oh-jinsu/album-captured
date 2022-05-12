@@ -20,9 +20,9 @@ class _Channel<T> implements Disposable {
 
   final List<StreamSubscription> _subscriptions = [];
 
-  void on<K extends Event>(T Function(K event) function) {
-    final subscription = _channel.on<K>((data) {
-      final result = function(data);
+  void on<K extends Event>(Future<T> Function(K event) function) {
+    final subscription = _channel.on<K>((data) async {
+      final result = await function(data);
 
       _sink.add(StoreData(result));
     });

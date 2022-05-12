@@ -1,10 +1,10 @@
-import 'package:album/application/controllers/album/store/photo_list.dart';
+import 'package:album/application/controllers/album/models/photo.dart';
 import 'package:album/application/controllers/album/widgets/floor.dart';
 import 'package:flutter/cupertino.dart';
 
 class AlbumListWidget extends StatefulWidget {
   final String albumId;
-  final List<PhotoViewModel> items;
+  final List<PhotoModel> items;
 
   const AlbumListWidget({
     Key? key,
@@ -17,7 +17,7 @@ class AlbumListWidget extends StatefulWidget {
 }
 
 class _AlbumListWidgetState extends State<AlbumListWidget> {
-  final List<PhotoViewModel> _items = [];
+  final List<PhotoModel> _items = [];
 
   @override
   void initState() {

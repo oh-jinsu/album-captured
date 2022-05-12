@@ -1,3 +1,4 @@
+import 'package:album/application/controllers/signup/models/form.dart';
 import 'package:album/application/models/album_user.dart';
 
 class AlbumModel {
@@ -31,6 +32,23 @@ class AlbumModel {
             ),
           )
           .toList(),
+    );
+  }
+
+  AlbumModel copy({
+    Arg<String>? id,
+    Arg<String?>? coverImageUri,
+    Arg<String>? title,
+    Arg<List<AlbumUserModel>>? users,
+    Arg<int>? photoCount,
+  }) {
+    return AlbumModel(
+      id: id != null ? id.value : this.id,
+      coverImageUri:
+          coverImageUri != null ? coverImageUri.value : this.coverImageUri,
+      title: title != null ? title.value : this.title,
+      users: users != null ? users.value : this.users,
+      photoCount: photoCount != null ? photoCount.value : this.photoCount,
     );
   }
 }

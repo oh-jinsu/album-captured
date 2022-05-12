@@ -11,7 +11,7 @@ class TextFieldStateStore extends Store<TextFieldState> {
     of<DialogToAddAlbum>().on<Pending>(_onPending);
   }
 
-  TextFieldState _onPending(Pending event) {
+  Future<TextFieldState> _onPending(Pending event) async {
     return TextFieldState.disabled;
   }
 }

@@ -37,7 +37,7 @@ class Profile extends Controller {
                           if (data != null) ...[
                             const SizedBox(height: 24.0),
                             ProfileAvatar(
-                              imageUri: data.avatar,
+                              imageUri: data.avatarImageUri,
                             ),
                             const SizedBox(height: 12.0),
                             Text(

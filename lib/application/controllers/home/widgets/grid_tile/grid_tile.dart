@@ -1,16 +1,16 @@
-import 'package:album/application/stores/album_list.dart';
 import 'package:album/application/controllers/home/widgets/grid_tile_avatar.dart';
+import 'package:album/application/models/album.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AlbumTile extends StatelessWidget {
   final void Function()? onTap;
-  final AlbumViewModel viewModel;
+  final AlbumModel album;
 
   const AlbumTile({
     Key? key,
     this.onTap,
-    required this.viewModel,
+    required this.album,
   }) : super(key: key);
 
   @override
@@ -36,11 +36,11 @@ class AlbumTile extends StatelessWidget {
               children: [
                 AspectRatio(
                   aspectRatio: 1.0,
-                  child: viewModel.coverImageUri != null
+                  child: album.coverImageUri != null
                       ? Image(
                           fit: BoxFit.cover,
                           image: NetworkImage(
-                            viewModel.coverImageUri!,
+                            album.coverImageUri!,
                           ),
                         )
                       : Container(
@@ -50,11 +50,10 @@ class AlbumTile extends StatelessWidget {
                 const SizedBox(height: 8.0),
                 Row(
                   children: [
-                    for (int j = 0; j < viewModel.users.length * 2 - 1; j++)
+                    for (int j = 0; j < album.users.length * 2 - 1; j++)
                       if (j % 2 == 0)
                         AlbumTileAvatar(
-                          networkImageUri:
-                              viewModel.users[j ~/ 2].avatarImageUri,
+                          networkImageUri: album.users[j ~/ 2].avatarImageUri,
                         )
                       else
                         const SizedBox(width: 4.0)
@@ -73,7 +72,7 @@ class AlbumTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                viewModel.title,
+                album.title,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -82,7 +81,7 @@ class AlbumTile extends StatelessWidget {
               ),
               const SizedBox(height: 2.0),
               Text(
-                viewModel.photoCount.toString(),
+                album.photoCount.toString(),
                 style: TextStyle(
                   fontSize: 16.0,
                   color: Colors.grey[600],

@@ -13,7 +13,7 @@ class MessageStore extends Store<String?> {
       ..on<SumbmitFailed>(_onSubmitFailed);
   }
 
-  String? _onTitleChanged(TitleChanged event) {
+  Future<String?> _onTitleChanged(TitleChanged event) async {
     if (event.value.isEmpty) {
       return "제목은 1글자 이상이어야 합니다.";
     }
@@ -25,7 +25,7 @@ class MessageStore extends Store<String?> {
     return null;
   }
 
-  String? _onSubmitFailed(SumbmitFailed event) {
+  Future<String?> _onSubmitFailed(SumbmitFailed event) async {
     return event.body;
   }
 }

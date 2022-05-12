@@ -12,7 +12,7 @@ class SubmitButtonStateStore extends Store<ButtonState> {
     ..on<TitleChanged>(_onTitleChanged)
     ..on<Pending>(_onAlbumPending);
 
-  ButtonState _onTitleChanged(TitleChanged event) {
+  Future<ButtonState> _onTitleChanged(TitleChanged event) async {
     if (value == ButtonState.pending) {
       return value;
     }
@@ -26,7 +26,7 @@ class SubmitButtonStateStore extends Store<ButtonState> {
     return ButtonState.enabled;
   }
 
-  ButtonState _onAlbumPending(Pending event) {
+  Future<ButtonState> _onAlbumPending(Pending event) async {
     return ButtonState.pending;
   }
 }

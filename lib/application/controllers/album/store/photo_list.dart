@@ -1,75 +1,80 @@
+import 'package:album/application/controller.dart';
 import 'package:album/application/controllers/album/controller.dart';
-import 'package:album/application/controllers/album/events/photo_added.dart';
 import 'package:album/application/controllers/album/events/photo_list_found.dart';
-import 'package:album/application/controllers/album/models/photo.dart';
+import 'package:album/application/controllers/album/models/list_of_photo.dart';
+import 'package:album/application/controllers/signup/models/form.dart';
+import 'package:album/application/events/photo_added.dart';
 import 'package:album/core/store/store.dart';
+import 'package:album/core/store/util.dart';
 
-class PhotoViewModel {
-  final String id;
-  final String publicImageUri;
-  final DateTime date;
-  final String? description;
-
-  const PhotoViewModel({
-    required this.id,
-    required this.publicImageUri,
-    required this.date,
-    required this.description,
-  });
-
-  factory PhotoViewModel.fromModel(PhotoModel model) {
-    return PhotoViewModel(
-      id: model.id,
-      publicImageUri: model.publicImageUri,
-      date: model.date,
-      description: model.description,
-    );
-  }
-}
-
-class ListOfPhotoViewmodel {
-  final String? next;
-
-  final List<PhotoViewModel> items;
-
-  const ListOfPhotoViewmodel({
-    required this.next,
-    required this.items,
-  });
-}
-
-class PhotoListStore extends Store<ListOfPhotoViewmodel> {
+class PhotoListStore extends Store<ListOfPhotoModel> {
   @override
   void onListen() {
-    of<Album>()
-      ..on<PhotoListFound>(_onPhotoListFound)
-      ..on<PhotoAdded>(_onPhotoAdded);
+    of<Album>().on<PhotoListFound>(_onPhotoListFound);
+    of<App>().on<PhotoAdded>(_onPhotoAdded);
   }
 
-  ListOfPhotoViewmodel _onPhotoListFound(PhotoListFound event) {
+  Future<ListOfPhotoModel> _onPhotoListFound(PhotoListFound event) async {
     if (hasValue) {
-      return ListOfPhotoViewmodel(next: event.body.next, items: [
-        ...value.items,
-        ...event.body.items.map(PhotoViewModel.fromModel)
-      ]);
+      return event.body.copy(
+        items: Arg(
+          [
+            ...value.items,
+            ...await Future.wait(
+              event.body.items.map(
+                (e) async => e.copy(
+                  publicImageUri: Arg(
+                    await StoreCacheUtil.network(e.publicImageUri),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      );
     }
 
-    return ListOfPhotoViewmodel(
-      next: event.body.next,
-      items: event.body.items.map(PhotoViewModel.fromModel).toList(),
+    return event.body.copy(
+      items: Arg(
+        await Future.wait(
+          event.body.items.map(
+            (e) async => e.copy(
+              publicImageUri: Arg(
+                await StoreCacheUtil.network(e.publicImageUri),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
-  ListOfPhotoViewmodel _onPhotoAdded(PhotoAdded event) {
+  Future<ListOfPhotoModel> _onPhotoAdded(PhotoAdded event) async {
     if (hasValue) {
-      return ListOfPhotoViewmodel(next: value.next, items: [
-        PhotoViewModel.fromModel(event.body),
-        ...value.items,
-      ]);
+      return value.copy(
+        items: Arg(
+          [
+            ...value.items,
+            event.body.copy(
+              publicImageUri: Arg(
+                await StoreCacheUtil.network(
+                  event.body.publicImageUri,
+                ),
+              ),
+            )
+          ],
+        ),
+      );
     }
 
-    return ListOfPhotoViewmodel(next: null, items: [
-      PhotoViewModel.fromModel(event.body),
+    return ListOfPhotoModel(next: null, items: [
+      event.body.copy(
+        publicImageUri: Arg(
+          await StoreCacheUtil.network(
+            event.body.publicImageUri,
+          ),
+        ),
+      )
     ]);
   }
 }

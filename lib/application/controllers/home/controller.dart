@@ -58,7 +58,7 @@ class Home extends Controller {
                                     ),
                                   ),
                                 ),
-                                viewModel: item,
+                                album: item,
                               ),
                           ],
                         ),

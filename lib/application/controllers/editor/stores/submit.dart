@@ -70,7 +70,7 @@ class FormStore extends Store<FormViewModel> {
       ..on<Pending>(_onPending);
   }
 
-  FormViewModel _onPending(Pending event) {
+  Future<FormViewModel> _onPending(Pending event) async {
     return value.copy(
       submitButtonState: ButtonState.pending,
       isImagePickerEnabled: false,
@@ -79,7 +79,7 @@ class FormStore extends Store<FormViewModel> {
     );
   }
 
-  FormViewModel _onPreviewAdded(PreviewAdded event) {
+  Future<FormViewModel> _onPreviewAdded(PreviewAdded event) async {
     if (value.submitButtonState == ButtonState.pending) {
       return value;
     }
@@ -88,7 +88,7 @@ class FormStore extends Store<FormViewModel> {
         image: event.body, submitButtonState: ButtonState.enabled);
   }
 
-  FormViewModel _onDateChanged(DateChanged event) {
+  Future<FormViewModel> _onDateChanged(DateChanged event) async {
     if (value.submitButtonState == ButtonState.pending) {
       return value;
     }
@@ -96,7 +96,7 @@ class FormStore extends Store<FormViewModel> {
     return value.copy(date: event.value);
   }
 
-  FormViewModel _onDescriptionChanged(DescriptionChanged event) {
+  Future<FormViewModel> _onDescriptionChanged(DescriptionChanged event) async {
     if (value.submitButtonState == ButtonState.pending) {
       return value;
     }

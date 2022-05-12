@@ -1,67 +1,81 @@
 import 'package:album/application/controller.dart';
+import 'package:album/application/controllers/signup/models/form.dart';
 import 'package:album/application/events/album_added.dart';
-import 'package:album/application/events/album_updated.dart';
+import 'package:album/application/events/photo_added.dart';
 import 'package:album/application/events/albums_found.dart';
 import 'package:album/application/models/album.dart';
-import 'package:album/application/models/album_user.dart';
 import 'package:album/core/store/store.dart';
+import 'package:album/core/store/util.dart';
 
-class AlbumUserViewModel {
-  final String id;
-  final String? avatarImageUri;
-
-  AlbumUserViewModel({
-    required this.id,
-    required this.avatarImageUri,
-  });
-
-  factory AlbumUserViewModel.fromModel(AlbumUserModel model) {
-    return AlbumUserViewModel(
-      id: model.id,
-      avatarImageUri: model.avatarImageUri,
-    );
-  }
-}
-
-class AlbumViewModel {
-  final String id;
-  final String? coverImageUri;
-  final String title;
-  final List<AlbumUserViewModel> users;
-  final int photoCount;
-
-  AlbumViewModel({
-    required this.id,
-    required this.coverImageUri,
-    required this.title,
-    required this.users,
-    required this.photoCount,
-  });
-
-  factory AlbumViewModel.fromModel(AlbumModel model) {
-    return AlbumViewModel(
-      id: model.id,
-      coverImageUri: model.coverImageUri,
-      title: model.title,
-      users: model.users.map(AlbumUserViewModel.fromModel).toList(),
-      photoCount: model.photoCount,
-    );
-  }
-}
-
-class AlbumListStore extends Store<List<AlbumViewModel>> {
+class AlbumListStore extends Store<List<AlbumModel>> {
   @override
   onListen() => of<App>()
     ..on<AlbumsFound>(_onAlbumsFound)
     ..on<AlbumAdded>(_onAlbumAdded)
-    ..on<LatestPhotoAdded>(_onAlbumUpdated);
+    ..on<PhotoAdded>(_onPhotoAdded);
 
-  List<AlbumViewModel> _onAlbumsFound(AlbumsFound event) {
-    return event.body.items.map(AlbumViewModel.fromModel).toList();
+  Future<List<AlbumModel>> _onAlbumsFound(AlbumsFound event) async {
+    return await Future.wait(event.body.items
+        .map(
+          (e) async => e.copy(
+            coverImageUri: e.coverImageUri != null
+                ? Arg(await StoreCacheUtil.network(
+                    e.coverImageUri!,
+                    resolution: StoreCacheRes.xhdpi,
+                  ))
+                : null,
+            users: Arg(
+              await Future.wait(
+                e.users
+                    .map(
+                      (e) async => e.copy(
+                        avatarImageUri: e.avatarImageUri != null
+                            ? Arg(
+                                await StoreCacheUtil.network(
+                                  e.avatarImageUri!,
+                                  resolution: StoreCacheRes.mdpi,
+                                ),
+                              )
+                            : null,
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+          ),
+        )
+        .toList());
   }
 
-  List<AlbumViewModel> _onAlbumAdded(AlbumAdded event) {
-    final newone = AlbumViewModel.fromModel(event.body);
+  Future<List<AlbumModel>> _onAlbumAdded(AlbumAdded event) async {
+    final newone = event.body.copy(
+      coverImageUri: event.body.coverImageUri != null
+          ? Arg(
+              await StoreCacheUtil.network(
+                event.body.coverImageUri!,
+                resolution: StoreCacheRes.xhdpi,
+              ),
+            )
+          : null,
+      users: Arg(
+        await Future.wait(
+          event.body.users
+              .map(
+                (e) async => e.copy(
+                  avatarImageUri: e.avatarImageUri != null
+                      ? Arg(
+                          await StoreCacheUtil.network(
+                            e.avatarImageUri!,
+                            resolution: StoreCacheRes.mdpi,
+                          ),
+                        )
+                      : null,
+                ),
+              )
+              .toList(),
+        ),
+      ),
+    );
 
     if (hasValue) {
       return [newone, ...value];
@@ -70,19 +84,21 @@ class AlbumListStore extends Store<List<AlbumViewModel>> {
     return [newone];
   }
 
-  List<AlbumViewModel> _onAlbumUpdated(LatestPhotoAdded event) {
-    return value.map((e) {
-      if (e.id != event.albumId) {
+  Future<List<AlbumModel>> _onPhotoAdded(PhotoAdded event) async {
+    return Future.wait(value.map((e) async {
+      if (e.id != event.body.albumId) {
         return e;
       }
 
-      return AlbumViewModel(
-        id: e.id,
-        coverImageUri: event.coverImageUri,
-        title: e.title,
-        users: e.users,
-        photoCount: e.photoCount + 1,
+      return e.copy(
+        coverImageUri: Arg(
+          await StoreCacheUtil.network(
+            event.body.publicImageUri,
+            resolution: StoreCacheRes.xhdpi,
+          ),
+        ),
+        photoCount: Arg(e.photoCount + 1),
       );
-    }).toList();
+    }).toList());
   }
 }
