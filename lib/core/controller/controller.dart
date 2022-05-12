@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:album/application/controllers/invitation/controller.dart';
+import 'package:album/application/events/linked.dart';
 import 'package:album/core/channel/channel.dart';
 import 'package:album/core/channel/custom.dart';
 import 'package:album/core/controller/arguments.dart';
@@ -61,7 +63,7 @@ abstract class Controller<T extends Arguments> extends Lifecycle {
   @override
   @mustCallSuper
   void onCreated(BuildContext context) async {
-    final subscription = _channel.on<Navigated>((event) {
+    final navigationSub = _channel.on<Navigated>((event) {
       if (event is Pushed) {
         Navigator.of(context).pushNamed(event.name, arguments: event.arguments);
       }
@@ -76,7 +78,14 @@ abstract class Controller<T extends Arguments> extends Lifecycle {
       }
     });
 
-    _subscriptions.add(subscription);
+    final dynamicLinkSub = _channel.on<InvitationAccepted>((event) {
+      final token = event.token;
+
+      Navigator.of(requireContext()).pushNamed("/invitation",
+          arguments: InvitationArguments(token: token));
+    });
+
+    _subscriptions.addAll([navigationSub, dynamicLinkSub]);
 
     final storeServices = stores.map((e) => Singleton.runtime(e));
 

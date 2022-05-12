@@ -1,6 +1,7 @@
 import 'package:album/application/channels/link.dart';
 import 'package:album/application/controllers/album/controller.dart';
 import 'package:album/application/controllers/home/controller.dart';
+import 'package:album/application/controllers/invitation/controller.dart';
 import 'package:album/application/controllers/profile/controller.dart';
 import 'package:album/application/controllers/signin/controller.dart';
 import 'package:album/application/controllers/signup/controller.dart';
@@ -94,7 +95,7 @@ class App extends Controller {
 
         if (name == "/signin") {
           return MaterialPageRoute(
-            builder: (context) => CupertinoScaffold(body: SignIn()),
+            builder: (context) => SignIn(),
           );
         }
 
@@ -102,7 +103,15 @@ class App extends Controller {
           final arguments = settings.arguments as SignUpArguments;
 
           return MaterialPageRoute(
-            builder: (context) => CupertinoScaffold(body: SignUp(arguments)),
+            builder: (context) => SignUp(arguments),
+          );
+        }
+
+        if (name == "/invitation") {
+          final arguments = settings.arguments as InvitationArguments;
+
+          return MaterialPageRoute(
+            builder: (context) => Invitation(arguments),
           );
         }
 
