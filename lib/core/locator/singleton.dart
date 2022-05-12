@@ -1,6 +1,7 @@
+import 'package:album/core/locator/creational.dart';
 import 'package:album/core/locator/service.dart';
 
-class Singleton<T> extends Service<T> {
+class Singleton<T extends Service> extends Creational<T> {
   final T instance;
 
   Singleton(

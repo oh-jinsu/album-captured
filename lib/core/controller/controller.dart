@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:album/core/channel/channel.dart';
+import 'package:album/core/channel/custom.dart';
 import 'package:album/core/controller/arguments.dart';
 import 'package:album/core/event/event.dart';
 import 'package:album/core/controller/lifecycle.dart';
 import 'package:album/core/locator/locator.dart';
-import 'package:album/core/locator/service.dart';
+import 'package:album/core/locator/creational.dart';
 import 'package:album/core/locator/singleton.dart';
 import 'package:album/core/store/store.dart';
 import 'package:album/core/usecase/usecase.dart';
@@ -18,11 +19,13 @@ abstract class Controller<T extends Arguments> extends Lifecycle {
 
   final List<StreamSubscription> _subscriptions = [];
 
-  final List<Service> services;
+  final List<Creational> services;
 
   final List<UseCase> usecases;
 
   final List<Store> stores;
+
+  final List<CustomChannel> channels;
 
   Controller(
     this.arguments, {
@@ -30,6 +33,7 @@ abstract class Controller<T extends Arguments> extends Lifecycle {
     this.services = const [],
     this.usecases = const [],
     this.stores = const [],
+    this.channels = const [],
   }) : super(key: key);
 
   Locator of<K>() {
@@ -56,7 +60,7 @@ abstract class Controller<T extends Arguments> extends Lifecycle {
 
   @override
   @mustCallSuper
-  void onCreated(BuildContext context) {
+  void onCreated(BuildContext context) async {
     final subscription = _channel.on<Navigated>((event) {
       if (event is Pushed) {
         Navigator.of(context).pushNamed(event.name, arguments: event.arguments);
@@ -76,16 +80,24 @@ abstract class Controller<T extends Arguments> extends Lifecycle {
 
     final storeServices = stores.map((e) => Singleton.runtime(e));
 
+    for (final element in services) {
+      await element.require().initialize();
+    }
+
     locatorManifest[toString()] = Locator(
       [Singleton<Channel>(_channel), ...storeServices, ...services],
     );
 
     for (final element in stores) {
-      element.awake();
+      await element.initialize();
     }
 
     for (final element in usecases) {
-      element.awake();
+      await element.initialize();
+    }
+
+    for (final element in channels) {
+      await element.initialize();
     }
 
     _channel.dispatch(Created(arguments));
@@ -104,6 +116,10 @@ abstract class Controller<T extends Arguments> extends Lifecycle {
   @override
   @mustCallSuper
   void onDestroyed(BuildContext context) {
+    for (final element in channels) {
+      element.dispose();
+    }
+
     for (final element in usecases) {
       element.dispose();
     }

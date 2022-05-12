@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:album/core/common/disposable.dart';
 import 'package:album/core/event/event.dart';
+import 'package:album/core/locator/service.dart';
 import 'package:rxdart/subjects.dart';
 
 abstract class InputPort {
@@ -12,7 +13,7 @@ abstract class OutputPort {
   StreamSubscription on<T extends Event>(void Function(T event) function);
 }
 
-class Channel implements InputPort, OutputPort, Disposable {
+class Channel implements InputPort, OutputPort, Service, Disposable {
   final _subject = PublishSubject<Event>();
 
   @override
@@ -37,4 +38,7 @@ class Channel implements InputPort, OutputPort, Disposable {
   void dispose() {
     _subject.close();
   }
+
+  @override
+  Future<void> initialize() async {}
 }

@@ -5,6 +5,7 @@ import 'package:album/core/event/event.dart';
 import 'package:album/core/channel/channel.dart';
 import 'package:album/core/controller/controller.dart';
 import 'package:album/core/locator/locator.dart';
+import 'package:album/core/locator/service.dart';
 import 'package:album/core/store/builder.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/subjects.dart';
@@ -48,7 +49,7 @@ class InitialData<T> extends StoreData<T> {
   InitialData(value) : super(value);
 }
 
-abstract class Store<T> implements Disposable {
+abstract class Store<T> implements Service, Disposable {
   Stream<StoreData<T>> get stream => _subject;
 
   bool get hasValue => _subject.hasValue;
@@ -73,7 +74,8 @@ abstract class Store<T> implements Disposable {
     return listener;
   }
 
-  void awake() {
+  @override
+  Future<void> initialize() async {
     onListen();
   }
 

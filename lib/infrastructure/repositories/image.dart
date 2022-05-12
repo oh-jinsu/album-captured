@@ -1,8 +1,9 @@
 import 'dart:io';
 
+import 'package:album/core/locator/service.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ImageRepository {
+class ImageRepository implements Service {
   final _picker = ImagePicker();
 
   Future<File?> pickFromGallery() async {
@@ -24,4 +25,7 @@ class ImageRepository {
 
     return File(image.path);
   }
+
+  @override
+  Future<void> initialize() async {}
 }

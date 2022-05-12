@@ -1,6 +1,7 @@
+import 'package:album/core/locator/service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class AuthRepository {
+class AuthRepository implements Service {
   final _storage = const FlutterSecureStorage();
 
   String? _accessToken;
@@ -32,4 +33,7 @@ class AuthRepository {
   Future<void> deleteRefreshToken() async {
     await _storage.delete(key: "refresh_token");
   }
+
+  @override
+  Future<void> initialize() async {}
 }

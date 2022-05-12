@@ -1,6 +1,7 @@
+import 'package:album/core/locator/creational.dart';
 import 'package:album/core/locator/service.dart';
 
-class Factory<T> extends Service<T> {
+class Factory<T extends Service> extends Creational<T> {
   final T Function() constructor;
 
   Factory(this.constructor) : super(T.toString());

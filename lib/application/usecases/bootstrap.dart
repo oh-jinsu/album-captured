@@ -9,33 +9,19 @@ import 'package:album/application/models/list_of_albums.dart';
 import 'package:album/application/models/user.dart';
 import 'package:album/core/event/event.dart';
 import 'package:album/core/usecase/usecase.dart';
-import 'package:album/firebase_options.dart';
 import 'package:album/infrastructure/client/client.dart';
 import 'package:album/infrastructure/client/response.dart';
 import 'package:album/infrastructure/repositories/auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class BootstrapUseCase extends UseCase {
   @override
   void onAwaken() {
     of<App>().on<Created>(
-      (_) => dotenv
-          .load()
-          .then(_initializeFirebase)
-          .then(_autoSignIn)
-          .then(_fetchAlbums)
-          .then(_navigateToHome),
+      (_) => _autoSignIn().then(_fetchAlbums).then(_navigateToHome),
     );
   }
 
-  Future<void> _initializeFirebase(void _) async {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  }
-
-  Future<void> _autoSignIn(void _) async {
+  Future<void> _autoSignIn() async {
     final refreshToken = await use<AuthRepository>().findRefreshToken();
 
     if (refreshToken == null) {

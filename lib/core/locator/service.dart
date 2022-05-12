@@ -1,7 +1,3 @@
-abstract class Service<T> {
-  final String key;
-
-  const Service(this.key);
-
-  T require();
+abstract class Service {
+  Future<void> initialize();
 }

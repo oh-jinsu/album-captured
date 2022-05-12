@@ -1,3 +1,4 @@
+import 'package:album/application/channels/link.dart';
 import 'package:album/application/controllers/album/controller.dart';
 import 'package:album/application/controllers/home/controller.dart';
 import 'package:album/application/controllers/profile/controller.dart';
@@ -11,6 +12,8 @@ import 'package:album/core/controller/arguments.dart';
 import 'package:album/core/controller/controller.dart';
 import 'package:album/core/locator/singleton.dart';
 import 'package:album/infrastructure/client/client.dart';
+import 'package:album/infrastructure/providers/env.dart';
+import 'package:album/infrastructure/providers/firebase.dart';
 import 'package:album/infrastructure/providers/precache.dart';
 import 'package:album/infrastructure/repositories/auth.dart';
 import 'package:album/infrastructure/repositories/image.dart';
@@ -32,11 +35,14 @@ class App extends Controller {
             BootstrapUseCase(),
           ],
           services: [
+            Singleton<EnvProvider>(EnvProvider()),
+            Singleton<FirebaseProvider>(FirebaseProvider()),
             Singleton<Client>(Client()),
             Singleton<AuthRepository>(AuthRepository()),
             Singleton<ImageRepository>(ImageRepository()),
             Singleton<PrecacheProvider>(PrecacheProvider()),
           ],
+          channels: [DynamicLinkChannel()],
         );
 
   @override

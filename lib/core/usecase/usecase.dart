@@ -5,6 +5,7 @@ import 'package:album/core/event/event.dart';
 import 'package:album/core/channel/channel.dart';
 import 'package:album/core/controller/controller.dart';
 import 'package:album/core/locator/locator.dart';
+import 'package:album/core/locator/service.dart';
 import 'package:flutter/material.dart';
 
 class _Channel implements Disposable {
@@ -32,11 +33,11 @@ class _Channel implements Disposable {
   }
 }
 
-abstract class UseCase implements Disposable {
+abstract class UseCase implements Service, Disposable {
   final List<_Channel> _channels = [];
 
   @protected
-  T use<T>() {
+  T use<T extends Service>() {
     return Locator.of<T>();
   }
 
@@ -49,7 +50,8 @@ abstract class UseCase implements Disposable {
     return channel;
   }
 
-  void awake() {
+  @override
+  Future<void> initialize() async {
     onAwaken();
   }
 

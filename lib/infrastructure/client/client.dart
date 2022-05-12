@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:album/core/locator/service.dart';
 import 'package:album/core/utilities/debug.dart';
 import 'package:album/infrastructure/client/response.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -11,7 +12,7 @@ typedef Fetcher = Future<http.Response> Function(
   Map<String, String>? headers,
 });
 
-class Client {
+class Client implements Service {
   Future<Response> get(String endpoint,
       {Map<String, String> headers = const {}}) async {
     Debug.log("GET $endpoint");
@@ -114,4 +115,7 @@ class Client {
 
     return FailureResponse(code: code, message: message);
   }
+
+  @override
+  Future<void> initialize() async {}
 }
