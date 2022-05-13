@@ -9,6 +9,7 @@ import 'package:album/core/event/event.dart';
 import 'package:album/core/usecase/usecase.dart';
 import 'package:album/infrastructure/client/client.dart';
 import 'package:album/infrastructure/client/response.dart';
+import 'package:album/infrastructure/providers/navigation.dart';
 import 'package:album/infrastructure/repositories/auth.dart';
 
 class SubmitAlbumUseCase extends UseCase {
@@ -41,7 +42,7 @@ class SubmitAlbumUseCase extends UseCase {
 
           of<App>().dispatch(AlbumAdded(body: AlbumModel.fromJson(body)));
 
-          of<DialogToAddAlbum>().dispatch(const Popped());
+          use<Coordinator>().pop();
         }
       },
     );

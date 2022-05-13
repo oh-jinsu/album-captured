@@ -7,7 +7,7 @@ import 'package:album/application/controllers/home/contollers/dialog_to_add_albu
 import 'package:album/core/common/state.dart';
 import 'package:album/core/controller/arguments.dart';
 import 'package:album/core/controller/controller.dart';
-import 'package:album/core/event/event.dart';
+import 'package:album/infrastructure/providers/navigation.dart';
 import 'package:flutter/cupertino.dart';
 
 class DialogToAddAlbum extends Controller {
@@ -86,7 +86,7 @@ class DialogToAddAlbum extends Controller {
       ),
       actions: [
         CupertinoButton(
-          onPressed: () => to<DialogToAddAlbum>().dispatch(const Popped()),
+          onPressed: () => use<Coordinator>().pop(),
           child: const Text(
             "취소",
             style: TextStyle(

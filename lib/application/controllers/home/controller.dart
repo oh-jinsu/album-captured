@@ -7,7 +7,7 @@ import 'package:album/application/controllers/home/widgets/grid_view.dart';
 import 'package:album/application/widgets/button.dart';
 import 'package:album/core/controller/arguments.dart';
 import 'package:album/core/controller/controller.dart';
-import 'package:album/core/event/event.dart';
+import 'package:album/infrastructure/providers/navigation.dart';
 import 'package:flutter/cupertino.dart';
 
 class Home extends Controller {
@@ -49,13 +49,11 @@ class Home extends Controller {
                           children: [
                             for (final item in data)
                               AlbumTile(
-                                onTap: () => to<Home>().dispatch(
-                                  Pushed(
-                                    "/album",
-                                    arguments: AlbumArguments(
-                                      id: item.id,
-                                      title: item.title,
-                                    ),
+                                onTap: () => use<Coordinator>().push(
+                                  "/album",
+                                  arguments: AlbumArguments(
+                                    id: item.id,
+                                    title: item.title,
                                   ),
                                 ),
                                 album: item,
@@ -71,7 +69,7 @@ class Home extends Controller {
             currentIndex: 0,
             onTap: (index) {
               if (index == 1) {
-                to<Home>().dispatch(const Replaced("/profile"));
+                use<Coordinator>().push("/profile");
               }
             },
             items: const [

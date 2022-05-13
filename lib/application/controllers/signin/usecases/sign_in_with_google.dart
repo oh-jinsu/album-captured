@@ -8,6 +8,7 @@ import 'package:album/core/event/event.dart';
 import 'package:album/core/usecase/usecase.dart';
 import 'package:album/infrastructure/client/client.dart';
 import 'package:album/infrastructure/client/response.dart';
+import 'package:album/infrastructure/providers/navigation.dart';
 import 'package:album/infrastructure/repositories/auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -36,13 +37,13 @@ class SignInWithGoogleUseCase extends UseCase {
 
       if (response is FailureResponse) {
         if (response.code == 2) {
-          of<SignIn>().dispatch(Replaced("/signup",
+          use<Coordinator>().replace("/signup",
               arguments: SignUpArguments(
                 provider: "google",
                 idToken: idToken,
                 name: account.displayName,
                 email: account.email,
-              )));
+              ));
         }
 
         return;
@@ -62,7 +63,7 @@ class SignInWithGoogleUseCase extends UseCase {
 
       await _fetchUser(accessToken);
 
-      of<SignIn>().dispatch(const Popped());
+      use<Coordinator>().pop();
     });
   }
 

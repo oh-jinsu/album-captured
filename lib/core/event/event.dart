@@ -10,36 +10,6 @@ abstract class OutputEvent<T> extends Event {
   const OutputEvent({required this.body});
 }
 
-abstract class Navigated extends Event {
-  const Navigated();
-}
-
-class Pushed extends Navigated {
-  final String name;
-
-  final Arguments arguments;
-
-  const Pushed(
-    this.name, {
-    this.arguments = const Arguments(),
-  });
-}
-
-class Replaced extends Navigated {
-  final String name;
-
-  final Arguments arguments;
-
-  const Replaced(
-    this.name, {
-    this.arguments = const Arguments(),
-  });
-}
-
-class Popped extends Navigated {
-  const Popped();
-}
-
 class Created<T extends Arguments> extends Event {
   final T arguments;
 

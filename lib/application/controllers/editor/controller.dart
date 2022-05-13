@@ -9,7 +9,7 @@ import 'package:album/application/controllers/editor/widgets/container.dart';
 import 'package:album/application/controllers/editor/widgets/submit_button.dart';
 import 'package:album/core/controller/arguments.dart';
 import 'package:album/core/controller/controller.dart';
-import 'package:album/core/event/event.dart';
+import 'package:album/infrastructure/providers/navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +41,7 @@ class Editor extends Controller<EditorArguments> {
   Widget render(BuildContext context) {
     return get<FormStore>().subscribe(
       onNext: (data) => PhotoEditorContainer(
-        onCanceled: () => to<Editor>().dispatch(const Popped()),
+        onCanceled: () => use<Coordinator>().pop(),
         children: [
           GestureDetector(
             onTap: () {

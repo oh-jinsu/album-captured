@@ -9,6 +9,7 @@ import 'package:album/core/event/event.dart';
 import 'package:album/core/controller/lifecycle.dart';
 import 'package:album/core/locator/locator.dart';
 import 'package:album/core/locator/creational.dart';
+import 'package:album/core/locator/service.dart';
 import 'package:album/core/locator/singleton.dart';
 import 'package:album/core/store/store.dart';
 import 'package:album/core/usecase/usecase.dart';
@@ -60,24 +61,13 @@ abstract class Controller<T extends Arguments> extends Lifecycle {
     return Locator.of<K>(scope);
   }
 
+  K use<K extends Service>() {
+    return Locator.of<K>();
+  }
+
   @override
   @mustCallSuper
   void onCreated(BuildContext context) async {
-    final navigationSub = _channel.on<Navigated>((event) {
-      if (event is Pushed) {
-        Navigator.of(context).pushNamed(event.name, arguments: event.arguments);
-      }
-
-      if (event is Replaced) {
-        Navigator.of(context)
-            .pushReplacementNamed(event.name, arguments: event.arguments);
-      }
-
-      if (event is Popped) {
-        Navigator.of(context).pop();
-      }
-    });
-
     final dynamicLinkSub = _channel.on<InvitationAccepted>((event) {
       final token = event.token;
 
@@ -85,7 +75,7 @@ abstract class Controller<T extends Arguments> extends Lifecycle {
           arguments: InvitationArguments(token: token));
     });
 
-    _subscriptions.addAll([navigationSub, dynamicLinkSub]);
+    _subscriptions.addAll([dynamicLinkSub]);
 
     final storeServices = stores.map((e) => Singleton.runtime(e));
 

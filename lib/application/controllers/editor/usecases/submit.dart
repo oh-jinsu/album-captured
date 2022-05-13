@@ -5,10 +5,10 @@ import 'package:album/application/controllers/editor/controller.dart';
 import 'package:album/application/controllers/editor/events/pending.dart';
 import 'package:album/application/controllers/editor/events/submitted.dart';
 import 'package:album/application/events/photo_added.dart';
-import 'package:album/core/event/event.dart';
 import 'package:album/core/usecase/usecase.dart';
 import 'package:album/infrastructure/client/client.dart';
 import 'package:album/infrastructure/client/response.dart';
+import 'package:album/infrastructure/providers/navigation.dart';
 import 'package:album/infrastructure/providers/precache.dart';
 import 'package:album/infrastructure/repositories/auth.dart';
 
@@ -54,7 +54,7 @@ class SubmitUseCase extends UseCase {
 
       of<App>().dispatch(result);
 
-      of<Editor>().dispatch(const Popped());
+      use<Coordinator>().pop();
     });
   }
 }

@@ -6,7 +6,7 @@ import 'package:album/application/controllers/profile/widgets/menu.dart';
 import 'package:album/application/stores/user.dart';
 import 'package:album/core/controller/arguments.dart';
 import 'package:album/core/controller/controller.dart';
-import 'package:album/core/event/event.dart';
+import 'package:album/infrastructure/providers/navigation.dart';
 import 'package:flutter/cupertino.dart';
 
 class Profile extends Controller {
@@ -70,8 +70,7 @@ class Profile extends Controller {
                                   ),
                                 ),
                                 ProfileMenu(
-                                  onTap: () => to<Profile>()
-                                      .dispatch(const Pushed("/signin")),
+                                  onTap: () {},
                                   prefix: const Text(
                                     "구매 내역",
                                   ),
@@ -88,8 +87,8 @@ class Profile extends Controller {
                               header: const Text("계정"),
                               children: [
                                 ProfileMenu(
-                                  onTap: () => to<Profile>()
-                                      .dispatch(const Pushed("/signin")),
+                                  onTap: () =>
+                                      use<Coordinator>().push("/signin"),
                                   prefix: const Text(
                                     "로그인",
                                     style: TextStyle(
@@ -157,7 +156,7 @@ class Profile extends Controller {
             currentIndex: 1,
             onTap: (index) {
               if (index == 0) {
-                to<Profile>().dispatch(const Replaced("/home"));
+                use<Coordinator>().replace("/home");
               }
             },
             items: const [

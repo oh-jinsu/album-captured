@@ -10,6 +10,7 @@ import 'package:album/core/event/event.dart';
 import 'package:album/core/usecase/usecase.dart';
 import 'package:album/infrastructure/client/client.dart';
 import 'package:album/infrastructure/client/response.dart';
+import 'package:album/infrastructure/providers/navigation.dart';
 import 'package:album/infrastructure/repositories/auth.dart';
 
 class SubmitUseCase extends UseCase {
@@ -64,7 +65,7 @@ class SubmitUseCase extends UseCase {
 
       of<App>().dispatch(UserFound(body: UserModel.fromJson(user.body)));
 
-      of<SignUp>().dispatch(const Popped());
+      use<Coordinator>().pop();
     });
   }
 

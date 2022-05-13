@@ -15,6 +15,7 @@ import 'package:album/core/locator/singleton.dart';
 import 'package:album/infrastructure/client/client.dart';
 import 'package:album/infrastructure/providers/env.dart';
 import 'package:album/infrastructure/providers/firebase.dart';
+import 'package:album/infrastructure/providers/navigation.dart';
 import 'package:album/infrastructure/providers/precache.dart';
 import 'package:album/infrastructure/repositories/auth.dart';
 import 'package:album/infrastructure/repositories/image.dart';
@@ -39,6 +40,7 @@ class App extends Controller {
             Singleton<EnvProvider>(EnvProvider()),
             Singleton<FirebaseProvider>(FirebaseProvider()),
             Singleton<Client>(Client()),
+            Singleton<Coordinator>(Coordinator()),
             Singleton<AuthRepository>(AuthRepository()),
             Singleton<ImageRepository>(ImageRepository()),
             Singleton<PrecacheProvider>(PrecacheProvider()),

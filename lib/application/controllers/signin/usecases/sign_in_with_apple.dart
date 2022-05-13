@@ -4,10 +4,10 @@ import 'package:album/application/controllers/signin/events/apple_sign_in_reques
 import 'package:album/application/controllers/signup/controller.dart';
 import 'package:album/application/events/user_found.dart';
 import 'package:album/application/models/user.dart';
-import 'package:album/core/event/event.dart';
 import 'package:album/core/usecase/usecase.dart';
 import 'package:album/infrastructure/client/client.dart';
 import 'package:album/infrastructure/client/response.dart';
+import 'package:album/infrastructure/providers/navigation.dart';
 import 'package:album/infrastructure/repositories/auth.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -34,13 +34,13 @@ class SignInWithAppleUseCase extends UseCase {
 
       if (response is FailureResponse) {
         if (response.code == 2) {
-          of<SignIn>().dispatch(Replaced("/signup",
+          use<Coordinator>().replace("/signup",
               arguments: SignUpArguments(
                 provider: "apple",
                 idToken: idToken,
                 name: account.givenName,
                 email: account.email,
-              )));
+              ));
         }
 
         return;
@@ -60,7 +60,7 @@ class SignInWithAppleUseCase extends UseCase {
 
       await _fetchUser(accessToken);
 
-      of<SignIn>().dispatch(const Popped());
+      use<Coordinator>().pop();
     });
   }
 

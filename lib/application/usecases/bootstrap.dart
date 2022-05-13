@@ -11,6 +11,7 @@ import 'package:album/core/event/event.dart';
 import 'package:album/core/usecase/usecase.dart';
 import 'package:album/infrastructure/client/client.dart';
 import 'package:album/infrastructure/client/response.dart';
+import 'package:album/infrastructure/providers/navigation.dart';
 import 'package:album/infrastructure/repositories/auth.dart';
 
 class BootstrapUseCase extends UseCase {
@@ -99,6 +100,6 @@ class BootstrapUseCase extends UseCase {
   }
 
   Future<void> _navigateToHome(void _) async {
-    of<Splash>().dispatch(const Pushed("/home"));
+    use<Coordinator>().push("/home");
   }
 }
