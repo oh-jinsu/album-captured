@@ -1,3 +1,1 @@
-# Album
-
-Touch your digital album phisically.
+Cature the development of a framework so far.
